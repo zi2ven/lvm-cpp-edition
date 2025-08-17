@@ -5,6 +5,7 @@
 #ifndef BYTECODE_H
 #define BYTECODE_H
 #include <cstdint>
+#include <string>
 
 
 namespace lvm::bytecode
@@ -167,6 +168,14 @@ namespace lvm::bytecode
     constexpr uint8_t JUMP_IF_TRUE = 0x81;
     constexpr uint8_t JUMP_IF_FALSE = 0x82;
     constexpr uint8_t SYSCALL = 0x83;
+    constexpr uint8_t THREAD_FINISH = 0x84;
+    constexpr uint64_t NEG_DOUBLE = 0x85;
+    constexpr uint64_t NEG_FLOAT = 0x86;
+    constexpr uint64_t ATOMIC_NEG_DOUBLE = 0x87;
+    constexpr uint64_t ATOMIC_NEG_FLOAT = 0x88;
+
+    std::string getInstructionName(uint8_t code);
+    uint8_t parseInstructionCode(std::string code);
 }
 
 #endif //BYTECODE_H

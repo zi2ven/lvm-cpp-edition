@@ -26,6 +26,7 @@ namespace lvm
         Memory();
         void init(const uint8_t* text, uint64_t textLength, const uint8_t* rodata, uint64_t rodataLength,
                   const uint8_t* data, uint64_t dataLength, uint64_t bssLength);
+        void destroy();
         void lock();
         void unlock();
         uint64_t allocateMemory(uint64_t size);
@@ -103,6 +104,7 @@ namespace lvm
         FreeMemory* next = nullptr;
 
         FreeMemory(uint64_t start, uint64_t end);
+        ~FreeMemory();
     };
 }
 

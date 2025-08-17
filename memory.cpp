@@ -76,6 +76,13 @@ namespace lvm
         this->freeMemoryList = head;
     }
 
+    void Memory::destroy()
+    {
+        delete[] memoryPageTable;
+        delete freeMemoryList;
+    }
+
+
     void Memory::lock()
     {
         this->_lock.lock();
@@ -583,5 +590,10 @@ namespace lvm
 
     FreeMemory::FreeMemory(uint64_t start, uint64_t end): start(start), end(end)
     {
+    }
+
+    FreeMemory::~FreeMemory()
+    {
+        delete this->next;
     }
 }
