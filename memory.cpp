@@ -9,8 +9,81 @@ namespace lvm
 {
     Memory::Memory() = default;
 
-    void Memory::init(const uint8_t* text, const uint8_t* rodata, const uint8_t* data, const uint64_t bssLength)
+    void Memory::init(const uint8_t* text, const uint64_t textLength, const uint8_t* rodata,
+                      const uint64_t rodataLength, const uint8_t* data, const uint64_t dataLength,
+                      const uint64_t bssLength)
     {
+        this->memoryPageTable = new MemoryPage****[PAGE_TABLE_SIZE];
+        uint64_t address = 0;
+        setMemoryPageIfAbsent(address, MemoryPage::MP_READ | MemoryPage::MP_WRITE | MemoryPage::MP_EXEC);
+        MemoryPage* currentPage = getMemoryPageSafely(address);
+        address += PAGE_SIZE;
+
+        uint64_t offset = 0;
+        for (uint64_t i = 0; i < textLength; ++i)
+        {
+            currentPage->setByte(offset, text[i]);
+            ++offset;
+            if (offset == PAGE_SIZE)
+            {
+                currentPage->flags &= ~MemoryPage::MP_EXEC;
+                setMemoryPageIfAbsent(address, MemoryPage::MP_READ | MemoryPage::MP_WRITE | MemoryPage::MP_EXEC);
+                currentPage = getMemoryPageSafely(address);
+                address += PAGE_SIZE;
+                offset = 0;
+            }
+        }
+        if (offset == 0)
+        {
+            currentPage->flags &= ~MemoryPage::MP_EXEC;
+        }
+        for (uint64_t i = 0; i < rodataLength; ++i)
+        {
+            currentPage->setByte(offset, rodata[i]);
+            ++offset;
+            if (offset == PAGE_SIZE)
+            {
+                currentPage->flags &= ~MemoryPage::MP_WRITE;
+                setMemoryPageIfAbsent(address, MemoryPage::MP_READ | MemoryPage::MP_WRITE);
+                currentPage = getMemoryPageSafely(address);
+                address += PAGE_SIZE;
+                offset = 0;
+            }
+        }
+        currentPage->flags |= MemoryPage::MP_WRITE;
+        for (uint64_t i = 0; i < dataLength; ++i)
+        {
+            currentPage->setByte(offset, data[i]);
+            ++offset;
+            if (offset == PAGE_SIZE)
+            {
+                setMemoryPageIfAbsent(address, MemoryPage::MP_READ | MemoryPage::MP_WRITE);
+                currentPage = getMemoryPageSafely(address);
+                address += PAGE_SIZE;
+                offset = 0;
+            }
+        }
+        uint64_t mapped = 0;
+        while (mapped < bssLength)
+        {
+            mapped += PAGE_SIZE;
+            setMemoryPageIfAbsent(address, MemoryPage::MP_READ | MemoryPage::MP_WRITE);
+            address += PAGE_SIZE;
+        }
+        offset = (offset + bssLength) % PAGE_SIZE;
+        auto* head = new FreeMemory(0, 0);
+        head->next = new FreeMemory(address - PAGE_SIZE + offset, MAX_MEMORY_ADDRESS);
+        this->freeMemoryList = head;
+    }
+
+    void Memory::lock()
+    {
+        this->_lock.lock();
+    }
+
+    void Memory::unlock()
+    {
+        this->_lock.unlock();
     }
 
     uint64_t Memory::allocateMemory(const uint64_t size)

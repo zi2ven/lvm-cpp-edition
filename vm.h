@@ -36,9 +36,12 @@ namespace lvm
         std::map<uint64_t, ThreadHandle*> threadID2Handle;
         std::map<uint64_t, FileHandle*> fd2FileHandle;
         uint64_t lastFd = 0;
+        uint64_t lastThreadID = 0;
+        std::mutex _mutex;
 
         ExecutionUnit* createExecutionUnit(uint64_t threadID, uint64_t entryPoint);
         uint64_t getThreadID();
+        uint64_t getFd();
     };
 
     class ThreadHandle
