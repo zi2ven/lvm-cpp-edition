@@ -79,8 +79,8 @@ namespace lvm
         explicit ExecutionUnit(VirtualMachine* virtualMachine);
         void init(uint64_t stackBase, uint64_t entryPoint);
         void setThreadHandle(ThreadHandle* threadHandle);
-        void execute();
-        void interrupt(uint8_t interruptNumber);
+        void execute() const;
+        void interrupt(uint8_t interruptNumber) const;
         void destroy();
 
     private:
@@ -100,7 +100,7 @@ namespace lvm
         FileHandle(std::string path, uint32_t flags, uint32_t mode);
         ~FileHandle();
         uint32_t read(uint8_t* buffer, uint32_t count) const;
-        uint32_t write(const uint8_t* buffer, uint32_t count);
+        uint32_t write(const uint8_t* buffer, uint32_t count) const;
 
     private:
         static constexpr uint32_t FH_PREOPEN = 1 << 2;

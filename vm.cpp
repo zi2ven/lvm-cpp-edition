@@ -87,7 +87,7 @@ namespace lvm
 
     uint64_t VirtualMachine::open(const char* path, uint32_t flags, uint32_t mode)
     {
-        uint64_t fd = getFd();
+        const uint64_t fd = getFd();
         fd2FileHandle[fd] = new FileHandle(path, flags, mode);
         return fd;
     }
@@ -113,7 +113,7 @@ namespace lvm
 
     uint32_t VirtualMachine::write(const uint64_t fd, const uint8_t* buffer, const uint32_t count)
     {
-        FileHandle* fileHandle = fd2FileHandle[fd];
+        const FileHandle* fileHandle = fd2FileHandle[fd];
         if (fileHandle == nullptr)
         {
             throw VMException("Invalid file descriptor: " + fd);
@@ -124,6 +124,7 @@ namespace lvm
     void VirtualMachine::exit(uint64_t status)
     {
         // TODO
+        running = false;
     }
 
 
@@ -186,15 +187,15 @@ namespace lvm
     }
 
 
-    void ExecutionUnit::execute()
+    void ExecutionUnit::execute() const
     {
         ThreadHandle* threadHandle = this->threadHandle;
         Memory* memory = this->virtualMachine->memory;
         for (;;)
         {
             // std::cout << registers[bytecode::PC_REGISTER] << ": " << bytecode::getInstructionName(
-                    // this->virtualMachine->memory->getByte(threadHandle, this->registers[bytecode::PC_REGISTER])) <<
-                // std::endl;
+            // this->virtualMachine->memory->getByte(threadHandle, this->registers[bytecode::PC_REGISTER])) <<
+            // std::endl;
             switch (const uint8_t code = this->virtualMachine->memory->
                                                getByte(threadHandle, this->registers[bytecode::PC_REGISTER]++))
             {
@@ -1658,7 +1659,7 @@ namespace lvm
         return;
     }
 
-    void ExecutionUnit::interrupt(const uint8_t interruptNumber)
+    void ExecutionUnit::interrupt(const uint8_t interruptNumber) const
     {
         Memory* memory = this->virtualMachine->memory;
         registers[bytecode::SP_REGISTER] -= 8;
@@ -1705,7 +1706,7 @@ namespace lvm
         return static_cast<uint32_t>(this->inputStream->gcount());
     }
 
-    uint32_t FileHandle::write(const uint8_t* buffer, const uint32_t count)
+    uint32_t FileHandle::write(const uint8_t* buffer, const uint32_t count) const
     {
         this->outputStream->write(reinterpret_cast<const char*>(buffer), count);
         return count;

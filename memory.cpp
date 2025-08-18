@@ -196,7 +196,7 @@ namespace lvm
         while (released < size)
         {
             releaseMemoryPage(address & ~PAGE_OFFSET_MASK);
-            uint64_t tmp = PAGE_SIZE - (address & PAGE_OFFSET_MASK);
+            const uint64_t tmp = PAGE_SIZE - (address & PAGE_OFFSET_MASK);
             released += tmp;
             address += tmp;
         }
