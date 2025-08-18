@@ -190,7 +190,8 @@ namespace lvm
         for (;;)
         {
             // std::cout << registers[bytecode::PC_REGISTER] << ": " << bytecode::getInstructionName(
-            // this->virtualMachine->memory->getByte(this->registers[bytecode::PC_REGISTER])) << std::endl;
+                    // this->virtualMachine->memory->getByte(threadHandle, this->registers[bytecode::PC_REGISTER])) <<
+                // std::endl;
             switch (const uint8_t code = this->virtualMachine->memory->
                                                getByte(threadHandle, this->registers[bytecode::PC_REGISTER]++))
             {
@@ -1650,6 +1651,7 @@ namespace lvm
             }
         }
     end:
+        // std::cout << registers[bytecode::RETURN_VALUE_REGISTER] << std::endl;
         return;
     }
 
