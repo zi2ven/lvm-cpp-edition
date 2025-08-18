@@ -16,6 +16,13 @@ namespace lvm
     {
     }
 
+    Module::~Module()
+    {
+        delete[] text;
+        delete[] rodata;
+        delete[] data;
+    }
+
     uint8_t* Module::raw()
     {
         std::vector<uint8_t> v;

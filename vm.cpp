@@ -7,6 +7,7 @@
 #include <iostream>
 #include <utility>
 #include <cmath>
+#include <ranges>
 
 #include "bytecode.h"
 #include "exception.h"
@@ -36,8 +37,11 @@ namespace lvm
 
     void VirtualMachine::destroy()
     {
+        memory->destroy();
         delete this->memory;
         this->memory = nullptr;
+        for (const auto& val : this->fd2FileHandle | std::views::values)
+            delete val;
     }
 
 
@@ -1675,7 +1679,7 @@ namespace lvm
 
 
     FileHandle::FileHandle(std::string path, const uint32_t flags, const uint32_t mode, std::istream* inputStream,
-                           std::ostream* outputStream): path(std::move(path)), flags(flags), mode(mode),
+                           std::ostream* outputStream): path(std::move(path)), flags(flags | FH_PREOPEN), mode(mode),
                                                         inputStream(inputStream), outputStream(outputStream)
     {
     }
@@ -1683,12 +1687,15 @@ namespace lvm
     FileHandle::FileHandle(std::string path, uint32_t flags, uint32_t mode): path(std::move(path)), flags(flags),
                                                                              mode(mode)
     {
-        this->inputStream = new std::ifstream(path);
-        this->outputStream = new std::ofstream(path);
+        if ((this->flags & FH_READ) != 0) this->inputStream = new std::ifstream(path);
+        else this->inputStream = nullptr;
+        if ((this->flags & FH_WRITE) != 0) this->outputStream = new std::ofstream(path);
+        else this->outputStream = nullptr;
     }
 
     FileHandle::~FileHandle()
     {
+        if (this->flags & FH_PREOPEN)return;
         delete this->inputStream;
         delete this->outputStream;
     }

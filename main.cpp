@@ -40,8 +40,8 @@ int main(int argc, const char** argv)
     argparse::ArgumentParser program("lvm");
     program.add_argument("file")
            .help("File to execute")
-           .required();
-    // .default_value("t.lvme");
+           // .required();
+    .default_value("t.lvme");
     program.add_argument("--stack-size", "-s")
            .help("Stack size")
            .default_value(lvm::DEFAULT_STACK_SIZE);
@@ -79,5 +79,6 @@ int main(int argc, const char** argv)
     // auto duration3 = std::chrono::duration_cast<std::chrono::milliseconds>(duration2 + duration1);
     // std::cout << "Total time: " << duration3.count() << " ms" << std::endl;
     vm.destroy();
+    delete module;
     return 0;
 }

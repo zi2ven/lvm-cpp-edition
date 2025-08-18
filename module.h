@@ -22,6 +22,7 @@ namespace lvm
 
         Module(const uint8_t* text, uint64_t textLength, const uint8_t* rodata, uint64_t rodataLength,
                const uint8_t* data, uint64_t dataLength, uint64_t bssLength, uint64_t entryPoint);
+        ~Module();
         uint8_t* raw();
         static Module* fromRaw(const uint8_t* raw);
     };

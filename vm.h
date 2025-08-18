@@ -5,6 +5,7 @@
 #ifndef VM_H
 #define VM_H
 #include <map>
+#include <mutex>
 #include <string>
 #include <thread>
 
@@ -91,6 +92,9 @@ namespace lvm
     class FileHandle
     {
     public:
+        static constexpr uint32_t FH_READ = 1;
+        static constexpr uint32_t FH_WRITE = 1 << 1;
+
         FileHandle(std::string path, uint32_t flags, uint32_t mode, std::istream* inputStream,
                    std::ostream* outputStream);
         FileHandle(std::string path, uint32_t flags, uint32_t mode);
@@ -99,6 +103,7 @@ namespace lvm
         uint32_t write(const uint8_t* buffer, uint32_t count);
 
     private:
+        static constexpr uint32_t FH_PREOPEN = 1 << 2;
         const std::string path;
         const uint32_t flags;
         const uint32_t mode;
@@ -139,7 +144,7 @@ namespace lvm
         void setDouble(ThreadHandle* threadHandle, uint64_t address, double value);
 
     private:
-        std::mutex _mutex;
+        std::recursive_mutex _mutex;
         std::mutex _lock;
 
         MemoryPage* getMemoryPageSafely(uint64_t address);
@@ -165,6 +170,7 @@ namespace lvm
         void initialize();
         void retain();
         void release();
+        void destroy();
 
         uint8_t getByte(ThreadHandle* threadHandle, uint64_t offset);
         uint16_t getShort(ThreadHandle* threadHandle, uint64_t address);
@@ -186,8 +192,6 @@ namespace lvm
         uint64_t _start;
         uint8_t* data = nullptr;
         std::mutex _mutex;
-
-        void destroy();
     };
 
     class FreeMemory

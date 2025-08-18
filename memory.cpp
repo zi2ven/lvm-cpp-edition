@@ -82,6 +82,27 @@ namespace lvm
 
     void Memory::destroy()
     {
+        for (uint64_t i = 0; i < PAGE_TABLE_SIZE; ++i)
+        {
+            if (memoryPageTable[i] == nullptr) continue;
+            for (uint64_t j = 0; j < PAGE_TABLE_SIZE; ++j)
+            {
+                if (memoryPageTable[i][j] == nullptr) continue;
+                for (uint64_t k = 0; k < PAGE_TABLE_SIZE; ++k)
+                {
+                    if (memoryPageTable[i][j][k] == nullptr) continue;
+                    for (uint64_t l = 0; l < PAGE_TABLE_SIZE; ++l)
+                        if (memoryPageTable[i][j][k][l] != nullptr)
+                        {
+                            memoryPageTable[i][j][k][l]->destroy();
+                            delete memoryPageTable[i][j][k][l];
+                        }
+                    delete[] memoryPageTable[i][j][k];
+                }
+                delete[] memoryPageTable[i][j];
+            }
+            delete[] memoryPageTable[i];
+        }
         delete[] memoryPageTable;
         delete freeMemoryList;
     }
@@ -99,7 +120,7 @@ namespace lvm
 
     uint64_t Memory::allocateMemory(ThreadHandle* threadHandle, const uint64_t size)
     {
-        _mutex.lock();
+        std::lock_guard lock(_mutex);
         const uint64_t length = size + 8;
         FreeMemory* freeMemory = this->freeMemoryList;
         while (freeMemory != nullptr)
@@ -118,19 +139,19 @@ namespace lvm
                     address += tmp;
                 }
                 this->setLong(threadHandle, start, size);
-                _mutex.unlock();
                 return start + 8;
             }
             freeMemory = freeMemory->next;
         }
-        _mutex.unlock();
         throw VMException("Out of memory");
     }
 
     uint64_t Memory::reallocateMemory(ThreadHandle* threadHandle, uint64_t address, uint64_t size)
     {
+
+        std::lock_guard lock(_mutex);
         const uint64_t oldSize = this->getLong(threadHandle, address - 8);
-        auto* bytes = new uint8_t[size];
+        auto* bytes = new uint8_t[oldSize];
         for (uint64_t i = 0; i < oldSize; i++) bytes[i] = this->getByte(threadHandle, address + i);
         this->freeMemory(threadHandle, address);
         const uint64_t newAddress = this->allocateMemory(threadHandle, size);
@@ -141,6 +162,7 @@ namespace lvm
 
     void Memory::freeMemory(ThreadHandle* threadHandle, uint64_t address)
     {
+        // std::lock_guard lock(_mutex);
         address -= 8;
         const uint64_t size = this->getLong(threadHandle, address) + 8;
         FreeMemory* freeMemory = this->freeMemoryList;
@@ -481,6 +503,7 @@ namespace lvm
 
     void MemoryPage::destroy()
     {
+        std::lock_guard lock(_mutex);
         delete[] this->data;
         this->flags &= ~MP_PRESENT;
     }
@@ -582,13 +605,13 @@ namespace lvm
         {
             // if (threadHandle != nullptr)
             // {
-                // ExecutionUnit* executionUnit = threadHandle->executionUnit;
-                // executionUnit->registers[bytecode::FLAGS_REGISTER] = executionUnit->registers[bytecode::FLAGS_REGISTER]
-                    // | bytecode::PAGE_NOT_READABLE;
+            // ExecutionUnit* executionUnit = threadHandle->executionUnit;
+            // executionUnit->registers[bytecode::FLAGS_REGISTER] = executionUnit->registers[bytecode::FLAGS_REGISTER]
+            // | bytecode::PAGE_NOT_READABLE;
             // }
             // else
             // {
-                throw VMException("Attempt to read from a non-readable memory page");
+            throw VMException("Attempt to read from a non-readable memory page");
             // }
         }
         return readable;
@@ -601,13 +624,13 @@ namespace lvm
         {
             // if (threadHandle != nullptr)
             // {
-                // ExecutionUnit* executionUnit = threadHandle->executionUnit;
-                // executionUnit->registers[bytecode::FLAGS_REGISTER] = executionUnit->registers[bytecode::FLAGS_REGISTER]
-                    // | bytecode::PAGE_NOT_WRITABLE;
+            // ExecutionUnit* executionUnit = threadHandle->executionUnit;
+            // executionUnit->registers[bytecode::FLAGS_REGISTER] = executionUnit->registers[bytecode::FLAGS_REGISTER]
+            // | bytecode::PAGE_NOT_WRITABLE;
             // }
             // else
             // {
-                throw VMException("Attempt to write to a non-writable memory page");
+            throw VMException("Attempt to write to a non-writable memory page");
             // }
         }
         return writable;
@@ -620,13 +643,13 @@ namespace lvm
         {
             // if (threadHandle != nullptr)
             // {
-                // ExecutionUnit* executionUnit = threadHandle->executionUnit;
-                // executionUnit->registers[bytecode::FLAGS_REGISTER] = executionUnit->registers[bytecode::FLAGS_REGISTER]
-                    // | bytecode::PAGE_NOT_EXECUTABLE;
+            // ExecutionUnit* executionUnit = threadHandle->executionUnit;
+            // executionUnit->registers[bytecode::FLAGS_REGISTER] = executionUnit->registers[bytecode::FLAGS_REGISTER]
+            // | bytecode::PAGE_NOT_EXECUTABLE;
             // }
             // else
             // {
-                throw VMException("Attempt to execute from a non-executable memory page");
+            throw VMException("Attempt to execute from a non-executable memory page");
             // }
         }
         return executable;
