@@ -191,12 +191,14 @@ namespace lvm
     {
         ThreadHandle* threadHandle = this->threadHandle;
         Memory* memory = this->virtualMachine->memory;
+        uint64_t* registers = this->registers;
+        auto rStart = std::chrono::high_resolution_clock::now();
         for (;;)
         {
             // std::cout << registers[bytecode::PC_REGISTER] << ": " << bytecode::getInstructionName(
-            // this->virtualMachine->memory->getByte(threadHandle, this->registers[bytecode::PC_REGISTER])) <<
+            // this->virtualMachine->memory->getByte(threadHandle, registers[bytecode::PC_REGISTER])) <<
             // std::endl;
-            switch (const uint8_t code = memory->getByte(threadHandle, this->registers[bytecode::PC_REGISTER]++))
+            switch (const uint8_t code = memory->getByte(threadHandle, registers[bytecode::PC_REGISTER]++))
             {
             case bytecode::NOP:
                 {
@@ -1679,7 +1681,7 @@ namespace lvm
 
     FileHandle::FileHandle(std::string path, const uint32_t flags, const uint32_t mode, FILE* input,
                            FILE* output): path(std::move(path)), flags(flags | FH_PREOPEN), mode(mode),
-                                                input(input), output(output)
+                                          input(input), output(output)
     {
     }
 

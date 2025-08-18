@@ -172,8 +172,8 @@ namespace lvm
         void destroy();
 
         uint8_t getByte(ThreadHandle* threadHandle, uint64_t offset);
-        uint16_t getShort(ThreadHandle* threadHandle, uint64_t address);
-        uint32_t getInt(ThreadHandle* threadHandle, uint64_t address);
+        uint16_t getShort(ThreadHandle* threadHandle, uint64_t offset);
+        uint32_t getInt(ThreadHandle* threadHandle, uint64_t offset);
         uint64_t getLong(ThreadHandle* threadHandle, uint64_t offset);
         float getFloat(ThreadHandle* threadHandle, uint64_t offset);
         double getDouble(ThreadHandle* threadHandle, uint64_t offset);
@@ -182,10 +182,10 @@ namespace lvm
         void setInt(ThreadHandle* threadHandle, uint64_t offset, uint32_t value);
         void setLong(ThreadHandle* threadHandle, uint64_t offset, uint64_t value);
         void setFloat(ThreadHandle* threadHandle, uint64_t offset, float value);
-        void setDouble(ThreadHandle* threadHandle, uint64_t offset, double value);
-        [[nodiscard]] bool checkReadable(ThreadHandle* threadHandle) const;
-        [[nodiscard]] bool checkWritable(ThreadHandle* threadHandle) const;
-        [[nodiscard]] bool checkExecutable(ThreadHandle* threadHandle) const;
+        void setDouble(const ThreadHandle* threadHandle, uint64_t offset, double value);
+        void interruptNotReadable(const ThreadHandle* threadHandle) const;
+        void interruptNotWritable(const ThreadHandle* threadHandle) const;
+        void interruptNotExecutable(const ThreadHandle* threadHandle) const;
 
     private:
         uint64_t _start;

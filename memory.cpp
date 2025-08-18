@@ -302,78 +302,127 @@ namespace lvm
 
     uint16_t Memory::getShort(ThreadHandle* threadHandle, uint16_t address)
     {
-        if (((address & PAGE_OFFSET_MASK) + 1) < PAGE_SIZE)
+        uint64_t offset = address & PAGE_OFFSET_MASK;
+        if ((offset + 1) < PAGE_SIZE)
         {
-            return getMemoryPageSafely(address)->getShort(threadHandle, address & PAGE_OFFSET_MASK);
+            return getMemoryPageSafely(address)->getShort(threadHandle, offset);
         }
-        return static_cast<uint16_t>(getMemoryPageSafely(address)->getByte(threadHandle, address & PAGE_OFFSET_MASK) | (
+        return static_cast<uint16_t>(getMemoryPageSafely(address)->getByte(threadHandle, offset) | (
             getMemoryPageSafely(address + 1)->getByte(threadHandle, 0) << 8));
     }
 
     uint32_t Memory::getInt(ThreadHandle* threadHandle, uint32_t address)
     {
-        if (((address & PAGE_OFFSET_MASK) + 3) < PAGE_SIZE)
+        uint64_t offset = address & PAGE_OFFSET_MASK;
+        if ((offset + 3) < PAGE_SIZE)
         {
-            return getMemoryPageSafely(address)->getInt(threadHandle, address & PAGE_OFFSET_MASK);
+            return getMemoryPageSafely(address)->getInt(threadHandle, offset);
         }
         uint32_t value = 0;
-        for (int i = 0; i < 4; i++)
+        int i = 0;
+        MemoryPage* page = getMemoryPageSafely(address);
+        for (; offset < PAGE_SIZE && i < 4; i++)
         {
-            value |= static_cast<uint32_t>(getMemoryPageSafely(address)->getByte(
-                    threadHandle, address & PAGE_OFFSET_MASK))
+            value |= static_cast<uint32_t>(page->getByte(
+                    threadHandle, offset))
                 << (i * 8);
-            ++address;
+            ++offset;
+        }
+        page = getMemoryPageSafely(address + i);
+        offset = 0;
+        for (; i < 4; i++)
+        {
+            value |= static_cast<uint32_t>(page->getByte(
+                    threadHandle, offset))
+                << (i * 8);
+            ++offset;
         }
         return value;
     }
 
     uint64_t Memory::getLong(ThreadHandle* threadHandle, uint64_t address)
     {
+        uint64_t offset = address & PAGE_OFFSET_MASK;
         if (((address & PAGE_OFFSET_MASK) + 7) < PAGE_SIZE)
         {
             return getMemoryPageSafely(address)->getLong(threadHandle, address & PAGE_OFFSET_MASK);
         }
         uint64_t value = 0;
-        for (uint64_t i = 0; i < 8; i++)
+        int i = 0;
+        MemoryPage* page = getMemoryPageSafely(address);
+        for (; offset < PAGE_SIZE; i++)
         {
-            value |= static_cast<uint64_t>(getMemoryPageSafely(address)->getByte(
-                    threadHandle, address & PAGE_OFFSET_MASK))
+            value |= static_cast<uint64_t>(page->getByte(
+                    threadHandle, offset))
                 << (i * 8);
-            ++address;
+            ++offset;
+        }
+        page = getMemoryPageSafely(address + i);
+        offset = 0;
+        for (; i < 8; i++)
+        {
+            value |= static_cast<uint64_t>(page->getByte(
+                    threadHandle, offset))
+                << (i * 8);
+            ++offset;
         }
         return value;
     }
 
     float Memory::getFloat(ThreadHandle* threadHandle, uint64_t address)
     {
-        if (((address & PAGE_OFFSET_MASK) + 3) < PAGE_SIZE)
+        uint64_t offset = address & PAGE_OFFSET_MASK;
+        if ((offset + 3) < PAGE_SIZE)
         {
-            return getMemoryPageSafely(address)->getFloat(threadHandle, address & PAGE_OFFSET_MASK);
+            return getMemoryPageSafely(address)->getFloat(threadHandle, offset);
         }
         uint32_t value = 0;
-        for (uint64_t i = 0; i < 4; i++)
+        int i = 0;
+        MemoryPage* page = getMemoryPageSafely(address);
+        for (; offset < PAGE_SIZE; i++)
         {
-            value |= static_cast<uint32_t>(getMemoryPageSafely(address)->getByte(
-                    threadHandle, address & PAGE_OFFSET_MASK))
+            value |= static_cast<uint32_t>(page->getByte(
+                    threadHandle, offset))
                 << (i * 8);
-            ++address;
+            ++offset;
+        }
+        page = getMemoryPageSafely(address + i);
+        offset = 0;
+        for (; i < 4; i++)
+        {
+            value |= static_cast<uint32_t>(page->getByte(
+                    threadHandle, offset))
+                << (i * 8);
+            ++offset;
         }
         return std::bit_cast<float>(value);
     }
 
     double Memory::getDouble(ThreadHandle* threadHandle, uint64_t address)
     {
-        if (((address & PAGE_OFFSET_MASK) + 7) < PAGE_SIZE)
+        uint64_t offset = address & PAGE_OFFSET_MASK;
+        if ((offset + 7) < PAGE_SIZE)
         {
-            return getMemoryPageSafely(address)->getDouble(threadHandle, address & PAGE_OFFSET_MASK);
+            return getMemoryPageSafely(address)->getDouble(threadHandle, offset);
         }
         uint64_t value = 0;
-        for (uint64_t i = 0; i < 8; i++)
+        int i = 0;
+        MemoryPage* page = getMemoryPageSafely(address);
+        for (; offset < PAGE_SIZE; i++)
         {
-            value |= static_cast<uint64_t>(getMemoryPageSafely(address)->getByte(
-                    threadHandle, address & PAGE_OFFSET_MASK))
+            value |= static_cast<uint64_t>(page->getByte(
+                    threadHandle, offset))
                 << (i * 8);
-            ++address;
+            ++offset;
+        }
+        page = getMemoryPageSafely(address + i);
+        offset = 0;
+        for (; i < 8; i++)
+        {
+            value |= static_cast<uint64_t>(page->getByte(
+                    threadHandle, offset))
+                << (i * 8);
+            ++offset;
         }
         return std::bit_cast<double>(value);
     }
@@ -385,88 +434,124 @@ namespace lvm
 
     void Memory::setShort(ThreadHandle* threadHandle, uint64_t address, uint16_t value)
     {
-        if (((address & PAGE_OFFSET_MASK) + 1) < PAGE_SIZE)
+        uint64_t offset = address & PAGE_OFFSET_MASK;
+        if ((offset + 1) < PAGE_SIZE)
         {
-            getMemoryPageSafely(address)->setShort(threadHandle, address & PAGE_OFFSET_MASK, value);
+            getMemoryPageSafely(address)->setShort(threadHandle, offset, value);
         }
         else
         {
-            getMemoryPageSafely(address)->setByte(threadHandle, address & PAGE_OFFSET_MASK,
-                                                  static_cast<uint8_t>(value & 0xFF));
+            getMemoryPageSafely(address)->setByte(threadHandle, offset, static_cast<uint8_t>(value & 0xFF));
             getMemoryPageSafely(address + 1)->setByte(threadHandle, 0, static_cast<uint8_t>(value >> 8));
         }
     }
 
     void Memory::setInt(ThreadHandle* threadHandle, uint64_t address, uint32_t value)
     {
-        if (((address & PAGE_OFFSET_MASK) + 3) < PAGE_SIZE)
+        uint64_t offset = address & PAGE_OFFSET_MASK;
+        if ((offset + 3) < PAGE_SIZE)
         {
-            getMemoryPageSafely(address)->setInt(threadHandle, address & PAGE_OFFSET_MASK, value);
+            getMemoryPageSafely(address)->setInt(threadHandle, offset, value);
         }
         else
         {
-            for (uint64_t i = 0; i < 4; i++)
+            int i = 0;
+            MemoryPage* page = getMemoryPageSafely(address);
+            for (; offset < PAGE_SIZE; i++)
             {
-                getMemoryPageSafely(address)->setByte(threadHandle,
-                                                      (address & PAGE_OFFSET_MASK),
-                                                      static_cast<uint8_t>(value >> (i * 8)));
-                ++address;
+                page->setByte(threadHandle, offset, static_cast<uint8_t>(value >> (i * 8)));
+                ++offset;
+            }
+            page = getMemoryPageSafely(address + i);
+            offset = 0;
+            for (; i < 4; i++)
+            {
+                page->setByte(threadHandle, offset, static_cast<uint8_t>(value >> (i * 8)));
+                ++offset;
             }
         }
     }
 
     void Memory::setLong(ThreadHandle* threadHandle, uint64_t address, uint64_t value)
     {
-        if (((address & PAGE_OFFSET_MASK) + 7) < PAGE_SIZE)
+        uint64_t offset = address & PAGE_OFFSET_MASK;
+        if ((offset + 7) < PAGE_SIZE)
         {
-            getMemoryPageSafely(address)->setLong(threadHandle, address & PAGE_OFFSET_MASK, value);
+            getMemoryPageSafely(address)->setLong(threadHandle, offset, value);
         }
         else
         {
-            for (uint64_t i = 0; i < 8; ++i)
+            int i = 0;
+            MemoryPage* page = getMemoryPageSafely(address);
+            for (; offset < PAGE_SIZE; ++i)
             {
-                getMemoryPageSafely(address)->setByte(threadHandle,
-                                                      address & PAGE_OFFSET_MASK,
-                                                      static_cast<uint8_t>(value >> (i * 8)));
-                ++address;
+                page->setByte(threadHandle, offset, static_cast<uint8_t>(value >> (i * 8)));
+                ++offset;
+            }
+            page = getMemoryPageSafely(address + i);
+            offset = 0;
+            for (; i < 8; ++i)
+            {
+                page->setByte(threadHandle, offset, static_cast<uint8_t>(value >> (i * 8)));
+                ++offset;
             }
         }
     }
 
     void Memory::setFloat(ThreadHandle* threadHandle, uint64_t address, float value)
     {
-        if (((address & PAGE_OFFSET_MASK) + 3) < PAGE_SIZE)
+        uint64_t offset = address & PAGE_OFFSET_MASK;
+        if ((offset + 3) < PAGE_SIZE)
         {
-            getMemoryPageSafely(address)->setFloat(threadHandle, address & PAGE_OFFSET_MASK, value);
+            getMemoryPageSafely(address)->setFloat(threadHandle, offset, value);
         }
         else
         {
             auto bits = std::bit_cast<uint32_t>(value);
-            for (uint64_t i = 0; i < 4; ++i)
+            int i = 0;
+            MemoryPage* page = getMemoryPageSafely(address);
+            for (; offset < PAGE_SIZE; ++i)
             {
-                getMemoryPageSafely(address)->setByte(threadHandle, address & PAGE_OFFSET_MASK,
-                                                      static_cast<uint8_t>(bits & 0xFF));
+                page->setByte(threadHandle, offset, static_cast<uint8_t>(bits & 0xFF));
                 bits >>= 8;
-                ++address;
+                ++offset;
+            }
+            page = getMemoryPageSafely(address + i);
+            offset = 0;
+            for (; i < 4; ++i)
+            {
+                page->setByte(threadHandle, offset, static_cast<uint8_t>(bits & 0xFF));
+                bits >>= 8;
+                ++offset;
             }
         }
     }
 
     void Memory::setDouble(ThreadHandle* threadHandle, uint64_t address, const double value)
     {
-        if (((address & PAGE_OFFSET_MASK) + 3) < PAGE_SIZE)
+        uint64_t offset = address & PAGE_OFFSET_MASK;
+        if ((offset + 3) < PAGE_SIZE)
         {
-            getMemoryPageSafely(address)->setDouble(threadHandle, address & PAGE_OFFSET_MASK, value);
+            getMemoryPageSafely(address)->setDouble(threadHandle, offset, value);
         }
         else
         {
             auto bits = std::bit_cast<uint64_t>(value);
-            for (auto i = 0; i < 8; ++i)
+            int i = 0;
+            MemoryPage* page = getMemoryPageSafely(address);
+            for (; offset < PAGE_SIZE; ++i)
             {
-                getMemoryPageSafely(address)->setByte(threadHandle, address & PAGE_OFFSET_MASK,
-                                                      static_cast<uint8_t>(bits & 0xFF));
+                page->setByte(threadHandle, offset, static_cast<uint8_t>(bits & 0xFF));
                 bits >>= 8;
-                ++address;
+                ++offset;
+            }
+            page = getMemoryPageSafely(address + i);
+            offset = 0;
+            for (; i < 8; ++i)
+            {
+                page->setByte(threadHandle, offset, static_cast<uint8_t>(bits & 0xFF));
+                bits >>= 8;
+                ++offset;
             }
         }
     }
@@ -509,151 +594,154 @@ namespace lvm
         this->flags &= ~MP_PRESENT;
     }
 
-    uint8_t MemoryPage::getByte(ThreadHandle* threadHandle, uint64_t offset)
+    uint8_t MemoryPage::getByte(ThreadHandle* threadHandle, const uint64_t offset)
     {
         if ((this->flags & MP_PRESENT) == 0) initialize();
-        if (this->checkReadable(threadHandle))
+        if ((this->flags & MP_READ) != 0)
             return this->data[offset];
+        interruptNotReadable(threadHandle);
         return 0;
     }
 
-    uint16_t MemoryPage::getShort(ThreadHandle* threadHandle, uint64_t address)
+    uint16_t MemoryPage::getShort(ThreadHandle* threadHandle, const uint64_t offset)
     {
         if ((this->flags & MP_PRESENT) == 0) initialize();
-        if (this->checkReadable(threadHandle))
-            return *reinterpret_cast<uint16_t*>(&this->data[address]);
+        if ((this->flags & MP_READ) != 0)
+            return *reinterpret_cast<uint16_t*>(&this->data[offset]);
+        interruptNotReadable(threadHandle);
         return 0;
     }
 
-    uint32_t MemoryPage::getInt(ThreadHandle* threadHandle, uint64_t address)
+    uint32_t MemoryPage::getInt(ThreadHandle* threadHandle, const uint64_t offset)
     {
         if ((this->flags & MP_PRESENT) == 0) initialize();
-        if (this->checkReadable(threadHandle))
-            return *reinterpret_cast<uint32_t*>(&this->data[address]);
+        if ((this->flags & MP_READ) != 0)
+            return *reinterpret_cast<uint32_t*>(&this->data[offset]);
+        interruptNotReadable(threadHandle);
         return 0;
     }
 
-    uint64_t MemoryPage::getLong(ThreadHandle* threadHandle, uint64_t offset)
+    uint64_t MemoryPage::getLong(ThreadHandle* threadHandle, const uint64_t offset)
     {
         if ((this->flags & MP_PRESENT) == 0) initialize();
-        if (this->checkReadable(threadHandle))
+        if ((this->flags & MP_READ) != 0)
             return *reinterpret_cast<uint64_t*>(&this->data[offset]);
+        interruptNotReadable(threadHandle);
         return 0;
     }
 
-    float MemoryPage::getFloat(ThreadHandle* threadHandle, uint64_t offset)
+    float MemoryPage::getFloat(ThreadHandle* threadHandle, const uint64_t offset)
     {
         if ((this->flags & MP_PRESENT) == 0) initialize();
-        if (this->checkReadable(threadHandle))
+        if ((this->flags & MP_READ) != 0)
             return *reinterpret_cast<float*>(&this->data[offset]);
+        interruptNotReadable(threadHandle);
         return 0;
     }
 
-    double MemoryPage::getDouble(ThreadHandle* threadHandle, uint64_t offset)
+    double MemoryPage::getDouble(ThreadHandle* threadHandle, const uint64_t offset)
     {
         if ((this->flags & MP_PRESENT) == 0) initialize();
-        if (this->checkReadable(threadHandle))
+        if ((this->flags & MP_READ) != 0)
             return *reinterpret_cast<double*>(&this->data[offset]);
+        interruptNotReadable(threadHandle);
         return 0;
     }
 
-    void MemoryPage::setByte(ThreadHandle* threadHandle, uint64_t offset, uint8_t value)
+    void MemoryPage::setByte(ThreadHandle* threadHandle, const uint64_t offset, const uint8_t value)
     {
         if ((this->flags & MP_PRESENT) == 0) initialize();
-        if (this->checkWritable(threadHandle))
+        if ((this->flags & MP_WRITE) != 0)
             this->data[offset] = value;
+        else
+            interruptNotWritable(threadHandle);
     }
 
-    void MemoryPage::setShort(ThreadHandle* threadHandle, uint64_t offset, uint16_t value)
+    void MemoryPage::setShort(ThreadHandle* threadHandle, const uint64_t offset, const uint16_t value)
     {
         if ((this->flags & MP_PRESENT) == 0) initialize();
-        if (this->checkWritable(threadHandle))
+        if ((this->flags & MP_WRITE) != 0)
             *reinterpret_cast<uint16_t*>(&this->data[offset]) = value;
+        else
+            interruptNotWritable(threadHandle);
     }
 
-    void MemoryPage::setInt(ThreadHandle* threadHandle, uint64_t offset, uint32_t value)
+    void MemoryPage::setInt(ThreadHandle* threadHandle, const uint64_t offset, const uint32_t value)
     {
         if ((this->flags & MP_PRESENT) == 0) initialize();
-        if (this->checkWritable(threadHandle))
+        if ((this->flags & MP_WRITE) != 0)
             *reinterpret_cast<uint32_t*>(&this->data[offset]) = value;
+        else
+            interruptNotWritable(threadHandle);
     }
 
-    void MemoryPage::setLong(ThreadHandle* threadHandle, uint64_t offset, uint64_t value)
+    void MemoryPage::setLong(ThreadHandle* threadHandle, const uint64_t offset, const uint64_t value)
     {
         if ((this->flags & MP_PRESENT) == 0) initialize();
-        if (this->checkWritable(threadHandle))
+        if ((this->flags & MP_WRITE) != 0)
             *reinterpret_cast<uint64_t*>(&this->data[offset]) = value;
+        else
+            interruptNotWritable(threadHandle);
     }
 
-    void MemoryPage::setFloat(ThreadHandle* threadHandle, uint64_t offset, float value)
+    void MemoryPage::setFloat(ThreadHandle* threadHandle, const uint64_t offset, const float value)
     {
         if ((this->flags & MP_PRESENT) == 0) initialize();
-        if (this->checkWritable(threadHandle))
+        if ((this->flags & MP_WRITE) != 0)
             *reinterpret_cast<float*>(&this->data[offset]) = value;
+        else
+            interruptNotWritable(threadHandle);
     }
 
-    void MemoryPage::setDouble(ThreadHandle* threadHandle, uint64_t offset, double value)
+    void MemoryPage::setDouble(const ThreadHandle* threadHandle, uint64_t offset, double value)
     {
         if ((this->flags & MP_PRESENT) == 0) initialize();
-        if (this->checkWritable(threadHandle))
+        if ((this->flags & MP_WRITE) != 0)
             *reinterpret_cast<double*>(&this->data[offset]) = value;
+        else
+            interruptNotWritable(threadHandle);
     }
 
-    bool MemoryPage::checkReadable(ThreadHandle* threadHandle) const
+    void MemoryPage::interruptNotReadable(const ThreadHandle* threadHandle) const
     {
-        bool readable = (this->flags & MP_READ) != 0;
-        if (!readable)
-        {
-            // if (threadHandle != nullptr)
-            // {
-            // ExecutionUnit* executionUnit = threadHandle->executionUnit;
-            // executionUnit->registers[bytecode::FLAGS_REGISTER] = executionUnit->registers[bytecode::FLAGS_REGISTER]
-            // | bytecode::PAGE_NOT_READABLE;
-            // }
-            // else
-            // {
-            throw VMException("Attempt to read from a non-readable memory page");
-            // }
-        }
-        return readable;
+        // if (threadHandle != nullptr)
+        // {
+        // const ExecutionUnit* executionUnit = threadHandle->executionUnit;
+        // executionUnit->registers[bytecode::FLAGS_REGISTER] = executionUnit->registers[bytecode::FLAGS_REGISTER]
+        // | bytecode::PAGE_NOT_READABLE;
+        // }
+        // else
+        // {
+        throw VMException("Attempt to read from a non-readable memory page");
+        // }
     }
 
-    bool MemoryPage::checkWritable(ThreadHandle* threadHandle) const
+    void MemoryPage::interruptNotWritable(const ThreadHandle* threadHandle) const
     {
-        bool writable = (this->flags & MP_WRITE) != 0;
-        if (!writable)
-        {
-            // if (threadHandle != nullptr)
-            // {
-            // ExecutionUnit* executionUnit = threadHandle->executionUnit;
-            // executionUnit->registers[bytecode::FLAGS_REGISTER] = executionUnit->registers[bytecode::FLAGS_REGISTER]
-            // | bytecode::PAGE_NOT_WRITABLE;
-            // }
-            // else
-            // {
-            throw VMException("Attempt to write to a non-writable memory page");
-            // }
-        }
-        return writable;
+        // if (threadHandle != nullptr)
+        // {
+        // const ExecutionUnit* executionUnit = threadHandle->executionUnit;
+        // executionUnit->registers[bytecode::FLAGS_REGISTER] = executionUnit->registers[bytecode::FLAGS_REGISTER]
+        // | bytecode::PAGE_NOT_WRITABLE;
+        // }
+        // else
+        // {
+        throw VMException("Attempt to write to a non-writable memory page");
+        // }
     }
 
-    bool MemoryPage::checkExecutable(ThreadHandle* threadHandle) const
+    void MemoryPage::interruptNotExecutable(const ThreadHandle* threadHandle) const
     {
-        bool executable = (this->flags & MP_EXEC) != 0;
-        if (!executable)
-        {
-            // if (threadHandle != nullptr)
-            // {
-            // ExecutionUnit* executionUnit = threadHandle->executionUnit;
-            // executionUnit->registers[bytecode::FLAGS_REGISTER] = executionUnit->registers[bytecode::FLAGS_REGISTER]
-            // | bytecode::PAGE_NOT_EXECUTABLE;
-            // }
-            // else
-            // {
-            throw VMException("Attempt to execute from a non-executable memory page");
-            // }
-        }
-        return executable;
+        // if (threadHandle != nullptr)
+        // {
+        // const ExecutionUnit* executionUnit = threadHandle->executionUnit;
+        // executionUnit->registers[bytecode::FLAGS_REGISTER] = executionUnit->registers[bytecode::FLAGS_REGISTER]
+        // | bytecode::PAGE_NOT_EXECUTABLE;
+        // }
+        // else
+        // {
+        throw VMException("Attempt to execute from a non-executable memory page");
+        // }
     }
 
     FreeMemory::FreeMemory(uint64_t start, uint64_t end): start(start), end(end)
