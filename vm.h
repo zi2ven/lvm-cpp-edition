@@ -124,7 +124,7 @@ namespace lvm
         Memory();
         void init(const uint8_t* text, uint64_t textLength, const uint8_t* rodata, uint64_t rodataLength,
                   const uint8_t* data, uint64_t dataLength, uint64_t bssLength);
-        void destroy();
+        void destroy() const;
         void lock();
         void unlock();
         uint64_t allocateMemory(ThreadHandle* threadHandle, uint64_t size);
@@ -166,7 +166,7 @@ namespace lvm
         uint64_t referenceCount = 0;
 
         MemoryPage(uint64_t start, uint32_t flags);
-        uint64_t start() const;
+        [[nodiscard]] uint64_t start() const;
         void initialize();
         void retain();
         void release();

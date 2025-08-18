@@ -80,7 +80,7 @@ namespace lvm
         this->freeMemoryList = head;
     }
 
-    void Memory::destroy()
+    void Memory::destroy() const
     {
         for (uint64_t i = 0; i < PAGE_TABLE_SIZE; ++i)
         {
@@ -92,11 +92,13 @@ namespace lvm
                 {
                     if (memoryPageTable[i][j][k] == nullptr) continue;
                     for (uint64_t l = 0; l < PAGE_TABLE_SIZE; ++l)
+                    {
                         if (memoryPageTable[i][j][k][l] != nullptr)
                         {
                             memoryPageTable[i][j][k][l]->destroy();
                             delete memoryPageTable[i][j][k][l];
                         }
+                    }
                     delete[] memoryPageTable[i][j][k];
                 }
                 delete[] memoryPageTable[i][j];
@@ -148,7 +150,6 @@ namespace lvm
 
     uint64_t Memory::reallocateMemory(ThreadHandle* threadHandle, uint64_t address, uint64_t size)
     {
-
         std::lock_guard lock(_mutex);
         const uint64_t oldSize = this->getLong(threadHandle, address - 8);
         auto* bytes = new uint8_t[oldSize];
