@@ -1,7 +1,6 @@
 #include <iostream>
 #include <argparse/argparse.hpp>
 
-#include "bytecode.h"
 #include "vm.h"
 
 int read_file_to_buffer(const std::string& path, uint8_t*& raw, size_t& size)
@@ -42,7 +41,7 @@ int main(int argc, const char** argv)
     program.add_argument("file")
            .help("File to execute")
            // .required();
-           .default_value("t.lvme");
+           .default_value("f.lvme");
     program.add_argument("--stack-size", "-s")
            .help("Stack size")
            .default_value(lvm::DEFAULT_STACK_SIZE);
@@ -67,18 +66,18 @@ int main(int argc, const char** argv)
     }
     const lvm::Module* module = lvm::Module::fromRaw(raw);
     free(raw);
-    // auto start = std::chrono::high_resolution_clock::now();
+    auto start = std::chrono::high_resolution_clock::now();
     vm.init(module);
-    // auto end = std::chrono::high_resolution_clock::now();
-    // auto duration1 = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-    // std::cout << "Init time: " << duration1.count() << " ms" << std::endl;
-    // auto rStart = std::chrono::high_resolution_clock::now();
+    auto end = std::chrono::high_resolution_clock::now();
+    auto duration1 = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+    std::cout << "Init time: " << duration1.count() << " ms" << std::endl;
+    auto rStart = std::chrono::high_resolution_clock::now();
     vm.run();
-    // auto rEnd = std::chrono::high_resolution_clock::now();
-    // auto duration2 = std::chrono::duration_cast<std::chrono::milliseconds>(rEnd - rStart);
-    // std::cout << "Execution time: " << duration2.count() << " ms" << std::endl;
-    // auto duration3 = std::chrono::duration_cast<std::chrono::milliseconds>(duration2 + duration1);
-    // std::cout << "Total time: " << duration3.count() << " ms" << std::endl;
+    auto rEnd = std::chrono::high_resolution_clock::now();
+    auto duration2 = std::chrono::duration_cast<std::chrono::milliseconds>(rEnd - rStart);
+    std::cout << "Execution time: " << duration2.count() << " ms" << std::endl;
+    auto duration3 = std::chrono::duration_cast<std::chrono::milliseconds>(duration2 + duration1);
+    std::cout << "Total time: " << duration3.count() << " ms" << std::endl;
     vm.destroy();
     return 0;
 }
