@@ -95,20 +95,19 @@ namespace lvm
         static constexpr uint32_t FH_READ = 1;
         static constexpr uint32_t FH_WRITE = 1 << 1;
 
-        FileHandle(std::string path, uint32_t flags, uint32_t mode, std::istream* inputStream,
-                   std::ostream* outputStream);
+        FileHandle(std::string path, uint32_t flags, uint32_t mode, FILE* input, FILE* output);
         FileHandle(std::string path, uint32_t flags, uint32_t mode);
         ~FileHandle();
-        uint32_t read(uint8_t* buffer, uint32_t count) const;
-        uint32_t write(const uint8_t* buffer, uint32_t count) const;
+        uint32_t _read(uint8_t* buffer, uint32_t count) const;
+        uint32_t _write(const uint8_t* buffer, uint32_t count) const;
 
     private:
         static constexpr uint32_t FH_PREOPEN = 1 << 2;
         const std::string path;
         const uint32_t flags;
         const uint32_t mode;
-        std::istream* inputStream;
-        std::ostream* outputStream;
+        FILE* input;
+        FILE* output;
     };
 
     class Memory

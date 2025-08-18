@@ -26,9 +26,9 @@ namespace lvm
                            module->dataLength, module->bssLength);
         this->entryPoint = module->entryPoint;
 
-        this->fd2FileHandle.insert(std::make_pair(0, new FileHandle("stdin", 0, 0, &std::cin, nullptr)));
-        this->fd2FileHandle.insert(std::make_pair(1, new FileHandle("stdout", 0, 0, nullptr, &std::cout)));
-        this->fd2FileHandle.insert(std::make_pair(2, new FileHandle("stderr", 0, 0, nullptr, &std::cerr)));
+        this->fd2FileHandle.insert(std::make_pair(0, new FileHandle("stdin", 0, 0, stdin, nullptr)));
+        this->fd2FileHandle.insert(std::make_pair(1, new FileHandle("stdout", 0, 0, nullptr, stdout)));
+        this->fd2FileHandle.insert(std::make_pair(2, new FileHandle("stderr", 0, 0, nullptr, stderr)));
 
         this->lastFd = 2;
 
@@ -108,7 +108,7 @@ namespace lvm
         {
             throw VMException("Invalid file descriptor: " + fd);
         }
-        return fileHandle->read(buffer, count);
+        return fileHandle->_read(buffer, count);
     }
 
     uint32_t VirtualMachine::write(const uint64_t fd, const uint8_t* buffer, const uint32_t count)
@@ -118,7 +118,7 @@ namespace lvm
         {
             throw VMException("Invalid file descriptor: " + fd);
         }
-        return fileHandle->write(buffer, count);
+        return fileHandle->_write(buffer, count);
     }
 
     void VirtualMachine::exit(uint64_t status)
@@ -196,8 +196,7 @@ namespace lvm
             // std::cout << registers[bytecode::PC_REGISTER] << ": " << bytecode::getInstructionName(
             // this->virtualMachine->memory->getByte(threadHandle, this->registers[bytecode::PC_REGISTER])) <<
             // std::endl;
-            switch (const uint8_t code = this->virtualMachine->memory->
-                                               getByte(threadHandle, this->registers[bytecode::PC_REGISTER]++))
+            switch (const uint8_t code = memory->getByte(threadHandle, this->registers[bytecode::PC_REGISTER]++))
             {
             case bytecode::NOP:
                 {
@@ -1678,37 +1677,36 @@ namespace lvm
     }
 
 
-    FileHandle::FileHandle(std::string path, const uint32_t flags, const uint32_t mode, std::istream* inputStream,
-                           std::ostream* outputStream): path(std::move(path)), flags(flags | FH_PREOPEN), mode(mode),
-                                                        inputStream(inputStream), outputStream(outputStream)
+    FileHandle::FileHandle(std::string path, const uint32_t flags, const uint32_t mode, FILE* input,
+                           FILE* output): path(std::move(path)), flags(flags | FH_PREOPEN), mode(mode),
+                                                input(input), output(output)
     {
     }
 
     FileHandle::FileHandle(std::string path, uint32_t flags, uint32_t mode): path(std::move(path)), flags(flags),
                                                                              mode(mode)
     {
-        if ((this->flags & FH_READ) != 0) this->inputStream = new std::ifstream(path);
-        else this->inputStream = nullptr;
-        if ((this->flags & FH_WRITE) != 0) this->outputStream = new std::ofstream(path);
-        else this->outputStream = nullptr;
+        if ((this->flags & FH_READ) != 0) this->input = fopen(path.c_str(), "rb");
+        else this->input = nullptr;
+        if ((this->flags & FH_WRITE) != 0) this->output = fopen(path.c_str(), "wb");
+        else this->output = nullptr;
     }
 
     FileHandle::~FileHandle()
     {
         if (this->flags & FH_PREOPEN)return;
-        delete this->inputStream;
-        delete this->outputStream;
+        if (this->input != nullptr) fclose(this->input);
+        if (this->output != nullptr) fclose(this->output);
     }
 
-    uint32_t FileHandle::read(uint8_t* buffer, const uint32_t count) const
+    uint32_t FileHandle::_read(uint8_t* buffer, const uint32_t count) const
     {
-        this->inputStream->read(reinterpret_cast<char*>(buffer), count);
-        return static_cast<uint32_t>(this->inputStream->gcount());
+        return fread(buffer, 1, count, this->input);
     }
 
-    uint32_t FileHandle::write(const uint8_t* buffer, const uint32_t count) const
+    uint32_t FileHandle::_write(const uint8_t* buffer, const uint32_t count) const
     {
-        this->outputStream->write(reinterpret_cast<const char*>(buffer), count);
+        fwrite(buffer, 1, count, this->output);
         return count;
     }
 }

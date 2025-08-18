@@ -23,7 +23,7 @@ namespace lvm
         delete[] data;
     }
 
-    uint8_t* Module::raw()
+    uint8_t* Module::raw() const
     {
         std::vector<uint8_t> v;
         v.push_back('l');

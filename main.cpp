@@ -22,7 +22,7 @@ int read_file_to_buffer(const std::string& path, uint8_t*& raw, size_t& size)
         return -2;
     }
 
-    size_t bytes_read = fread(raw, 1, size, file);
+    const size_t bytes_read = fread(raw, 1, size, file);
     fclose(file);
 
     if (bytes_read != size)
@@ -69,15 +69,15 @@ int main(int argc, const char** argv)
     // auto start = std::chrono::high_resolution_clock::now();
     vm.init(module);
     // auto end = std::chrono::high_resolution_clock::now();
-    // auto duration1 = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-    // std::cout << "Init time: " << duration1.count() << " ms" << std::endl;
+    // auto duration1 = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+    // std::cout << "Init time: " << duration1.count() << " us" << std::endl;
     // auto rStart = std::chrono::high_resolution_clock::now();
     vm.run();
     // auto rEnd = std::chrono::high_resolution_clock::now();
-    // auto duration2 = std::chrono::duration_cast<std::chrono::milliseconds>(rEnd - rStart);
-    // std::cout << "Execution time: " << duration2.count() << " ms" << std::endl;
-    // auto duration3 = std::chrono::duration_cast<std::chrono::milliseconds>(duration2 + duration1);
-    // std::cout << "Total time: " << duration3.count() << " ms" << std::endl;
+    // auto duration2 = std::chrono::duration_cast<std::chrono::microseconds>(rEnd - rStart);
+    // std::cout << "Execution time: " << duration2.count() << " us" << std::endl;
+    // auto duration3 = std::chrono::duration_cast<std::chrono::microseconds>(duration2 + duration1);
+    // std::cout << "Total time: " << duration3.count() << " us" << std::endl;
     vm.destroy();
     delete module;
     return 0;
