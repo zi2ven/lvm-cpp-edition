@@ -1,10 +1,10 @@
-# Lightweight Virtual Machine (LVM)
+# LVM-CPP-Edition
 
-一个用现代C++（C++20）编写的轻量级虚拟机实现。
+一个用现代C++（C++20）编写的虚拟机实现。
 
 ## 项目概述
 
-LVM（Lightweight Virtual Machine）是一个简单的虚拟机实现，用于执行自定义字节码。该项目展示了虚拟机的基本工作原理，包括内存管理、指令执行、线程处理等核心概念。
+LVM（L Virtual Machine）是LVM的C++实现，用于执行自定义字节码。
 
 ## 特性
 
