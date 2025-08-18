@@ -3,6 +3,8 @@
 //
 #include "memory.h"
 
+#include <iostream>
+
 #include "exception.h"
 
 namespace lvm
@@ -13,7 +15,7 @@ namespace lvm
                       const uint64_t rodataLength, const uint8_t* data, const uint64_t dataLength,
                       const uint64_t bssLength)
     {
-        this->memoryPageTable = new MemoryPage****[PAGE_TABLE_SIZE];
+        this->memoryPageTable = new MemoryPage****[PAGE_TABLE_SIZE]{};
         uint64_t address = 0;
         setMemoryPageIfAbsent(address, MemoryPage::MP_READ | MemoryPage::MP_WRITE | MemoryPage::MP_EXEC);
         MemoryPage* currentPage = getMemoryPageSafely(address);
@@ -117,6 +119,7 @@ namespace lvm
                 _mutex.unlock();
                 return start + 8;
             }
+            freeMemory = freeMemory->next;
         }
         _mutex.unlock();
         throw VMException("Out of memory");
@@ -217,21 +220,21 @@ namespace lvm
         MemoryPage**** pud = this->memoryPageTable[pgdOffset];
         if (pud == nullptr)
         {
-            pud = new MemoryPage***[PAGE_TABLE_SIZE];
+            pud = new MemoryPage***[PAGE_TABLE_SIZE]{};
             memoryPageTable[pgdOffset] = pud;
         }
         uint64_t pudOffset = (address >> 30) & 0x1ff;
         MemoryPage*** pmd = pud[pudOffset];
         if (pmd == nullptr)
         {
-            pmd = new MemoryPage**[PAGE_TABLE_SIZE];
+            pmd = new MemoryPage**[PAGE_TABLE_SIZE]{};
             pud[pudOffset] = pmd;
         }
         uint64_t pmdOffset = (address >> 21) & 0x1ff;
         MemoryPage** pte = pmd[pmdOffset];
         if (pte == nullptr)
         {
-            pte = new MemoryPage*[PAGE_TABLE_SIZE];
+            pte = new MemoryPage*[PAGE_TABLE_SIZE]{};
             pmd[pmdOffset] = pte;
         }
         uint64_t pteOffset = (address >> 12) & 0x1ff;
@@ -434,32 +437,35 @@ namespace lvm
         }
     }
 
-    MemoryPage::MemoryPage(const uint64_t start, const uint32_t flags): flags(flags), start(start)
+    MemoryPage::MemoryPage(const uint64_t start, const uint32_t flags): flags(flags), _start(start)
     {
     }
 
+    uint64_t MemoryPage::start() const
+    {
+        return _start;
+    }
+
+
     void MemoryPage::initialize()
     {
-        this->_mutex.lock();
+        std::lock_guard lock(_mutex);
         if ((this->flags & MP_PRESENT) != 0) return;
-        this->data = new uint8_t[Memory::PAGE_SIZE];
+        this->data = new uint8_t[Memory::PAGE_SIZE]{};
         this->flags |= MP_PRESENT;
-        this->_mutex.unlock();
     }
 
     void MemoryPage::retain()
     {
-        this->_mutex.lock();
+        std::lock_guard lock(_mutex);
         ++this->referenceCount;
-        this->_mutex.unlock();
     }
 
     void MemoryPage::release()
     {
-        this->_mutex.lock();
+        std::lock_guard lock(_mutex);
         --this->referenceCount;
         if (this->referenceCount == 0) this->destroy();
-        this->_mutex.unlock();
     }
 
     void MemoryPage::destroy()
@@ -468,7 +474,7 @@ namespace lvm
         this->flags &= ~MP_PRESENT;
     }
 
-    uint8_t MemoryPage::getByte(uint8_t offset)
+    uint8_t MemoryPage::getByte(uint64_t offset)
     {
         if ((this->flags & MP_PRESENT) == 0) initialize();
         if (this->checkReadable())
@@ -476,7 +482,7 @@ namespace lvm
         return 0;
     }
 
-    uint16_t MemoryPage::getShort(uint16_t address)
+    uint16_t MemoryPage::getShort(uint64_t address)
     {
         if ((this->flags & MP_PRESENT) == 0) initialize();
         if (this->checkReadable())
@@ -484,7 +490,7 @@ namespace lvm
         return 0;
     }
 
-    uint32_t MemoryPage::getInt(uint32_t address)
+    uint32_t MemoryPage::getInt(uint64_t address)
     {
         if ((this->flags & MP_PRESENT) == 0) initialize();
         if (this->checkReadable())
@@ -516,21 +522,21 @@ namespace lvm
         return 0;
     }
 
-    void MemoryPage::setByte(uint8_t offset, uint8_t value)
+    void MemoryPage::setByte(uint64_t offset, uint8_t value)
     {
         if ((this->flags & MP_PRESENT) == 0) initialize();
         if (this->checkWritable())
             this->data[offset] = value;
     }
 
-    void MemoryPage::setShort(uint16_t offset, uint16_t value)
+    void MemoryPage::setShort(uint64_t offset, uint16_t value)
     {
         if ((this->flags & MP_PRESENT) == 0) initialize();
         if (this->checkWritable())
             *reinterpret_cast<uint16_t*>(&this->data[offset]) = value;
     }
 
-    void MemoryPage::setInt(uint32_t offset, uint32_t value)
+    void MemoryPage::setInt(uint64_t offset, uint32_t value)
     {
         if ((this->flags & MP_PRESENT) == 0) initialize();
         if (this->checkWritable())

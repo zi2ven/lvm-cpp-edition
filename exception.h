@@ -5,15 +5,14 @@
 #ifndef EXCEPTION_H
 #define EXCEPTION_H
 #include <exception>
+#include <stdexcept>
 #include <string>
 
 namespace lvm
 {
-    class VMException : std::exception
+    class VMException : std::runtime_error
     {
     public:
-        std::string message;
-
         explicit VMException(std::string message);
     };
 }

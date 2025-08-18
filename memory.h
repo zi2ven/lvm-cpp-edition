@@ -68,19 +68,20 @@ namespace lvm
         uint64_t referenceCount = 0;
 
         MemoryPage(uint64_t start, uint32_t flags);
+        uint64_t start() const;
         void initialize();
         void retain();
         void release();
 
-        uint8_t getByte(uint8_t offset);
-        uint16_t getShort(uint16_t offset);
-        uint32_t getInt(uint32_t offset);
+        uint8_t getByte(uint64_t offset);
+        uint16_t getShort(uint64_t offset);
+        uint32_t getInt(uint64_t offset);
         uint64_t getLong(uint64_t offset);
         float getFloat(uint64_t offset);
         double getDouble(uint64_t offset);
-        void setByte(uint8_t offset, uint8_t value);
-        void setShort(uint16_t offset, uint16_t value);
-        void setInt(uint32_t offset, uint32_t value);
+        void setByte(uint64_t offset, uint8_t value);
+        void setShort(uint64_t offset, uint16_t value);
+        void setInt(uint64_t offset, uint32_t value);
         void setLong(uint64_t offset, uint64_t value);
         void setFloat(uint64_t offset, float value);
         void setDouble(uint64_t offset, double value);
@@ -89,7 +90,7 @@ namespace lvm
         [[nodiscard]] bool checkExecutable() const;
 
     private:
-        uint64_t start;
+        uint64_t _start;
         uint8_t* data = nullptr;
         std::mutex _mutex;
 

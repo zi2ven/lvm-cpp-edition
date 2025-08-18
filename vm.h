@@ -15,6 +15,7 @@
 namespace lvm
 {
     constexpr uint64_t DEFAULT_STACK_SIZE = 4 * 1024 * 1024;
+    constexpr uint64_t LVM_VERSION = 0;
 
     class VirtualMachine;
     class ThreadHandle;

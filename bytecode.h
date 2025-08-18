@@ -18,11 +18,11 @@ namespace lvm::bytecode
     constexpr uint8_t FLAGS_REGISTER = 40;
     constexpr uint8_t IDTR_REGISTER = 41;
     constexpr uint64_t ZERO_MASK = 1;
-    constexpr uint64_t CARRY_MASK = 2;
-    constexpr uint64_t UNSIGNED_MASK = 4;
-    constexpr uint64_t PAGE_NOT_READABLE = 8;
-    constexpr uint64_t PAGE_NOT_WRITABLE = 16;
-    constexpr uint64_t PAGE_NOT_EXECUTABLE = 32;
+    constexpr uint64_t CARRY_MASK = 1 << 1;
+    constexpr uint64_t UNSIGNED_MASK = 1 << 2;
+    constexpr uint64_t PAGE_NOT_READABLE = 1 << 3;
+    constexpr uint64_t PAGE_NOT_WRITABLE = 1 << 4;
+    constexpr uint64_t PAGE_NOT_EXECUTABLE = 1 << 5;
     constexpr uint8_t BYTE_TYPE = 0;
     constexpr uint8_t SHORT_TYPE = 1;
     constexpr uint8_t INT_TYPE = 2;

@@ -125,7 +125,7 @@ namespace lvm
 
     uint64_t VirtualMachine::getThreadID()
     {
-        this->_mutex.lock();
+        std::lock_guard lock(_mutex);
         uint64_t threadID = this->lastThreadID + 1;
         while (this->threadID2Handle.contains(threadID)) ++threadID;
         this->lastThreadID = threadID;
@@ -135,11 +135,10 @@ namespace lvm
 
     uint64_t VirtualMachine::getFd()
     {
-        this->_mutex.lock();
+        std::lock_guard lock(_mutex);
         uint64_t fd = this->lastFd + 1;
         while (this->fd2FileHandle.contains(fd)) ++fd;
         this->lastFd = fd;
-        this->_mutex.unlock();
         return fd;
     }
 
@@ -157,12 +156,11 @@ namespace lvm
 
     void ThreadHandle::start()
     {
-        this->_mutex.lock();
+        std::lock_guard lock(_mutex);
         if (this->_thread == nullptr)
         {
             this->_thread = new std::thread(&ExecutionUnit::execute, this->executionUnit);
         }
-        this->_mutex.unlock();
     }
 
 
@@ -172,7 +170,7 @@ namespace lvm
 
     void ExecutionUnit::init(uint64_t stackBase, uint64_t entryPoint)
     {
-        this->registers = new uint64_t[bytecode::REGISTER_COUNT];
+        this->registers = new uint64_t[bytecode::REGISTER_COUNT]{};
 
         this->registers[bytecode::BP_REGISTER] = stackBase;
         this->registers[bytecode::SP_REGISTER] = stackBase;
@@ -190,7 +188,10 @@ namespace lvm
         Memory* memory = this->virtualMachine->memory;
         for (;;)
         {
-            switch (const uint8_t code = this->virtualMachine->memory->getByte(this->registers[bytecode::PC_REGISTER]))
+            // std::cout << registers[bytecode::PC_REGISTER] << ": " << bytecode::getInstructionName(
+                // this->virtualMachine->memory->getByte(this->registers[bytecode::PC_REGISTER])) << std::endl;
+            switch (const uint8_t code = this->virtualMachine->memory->
+                                               getByte(this->registers[bytecode::PC_REGISTER]++))
             {
             case bytecode::NOP:
                 {
@@ -256,56 +257,56 @@ namespace lvm
                 {
                     const uint8_t address = memory->getByte(registers[bytecode::PC_REGISTER]++);
                     const uint8_t target = memory->getByte(registers[bytecode::PC_REGISTER]++);
-                    registers[target] = memory->getByte(address);
+                    registers[target] = memory->getByte(registers[address]);
                     break;
                 }
             case bytecode::LOAD_2:
                 {
                     const uint8_t address = memory->getByte(registers[bytecode::PC_REGISTER]++);
                     const uint8_t target = memory->getByte(registers[bytecode::PC_REGISTER]++);
-                    registers[target] = memory->getShort(address);
+                    registers[target] = memory->getShort(registers[address]);
                     break;
                 }
             case bytecode::LOAD_4:
                 {
                     const uint8_t address = memory->getByte(registers[bytecode::PC_REGISTER]++);
                     const uint8_t target = memory->getByte(registers[bytecode::PC_REGISTER]++);
-                    registers[target] = memory->getInt(address);
+                    registers[target] = memory->getInt(registers[address]);
                     break;
                 }
             case bytecode::LOAD_8:
                 {
                     const uint8_t address = memory->getByte(registers[bytecode::PC_REGISTER]++);
                     const uint8_t target = memory->getByte(registers[bytecode::PC_REGISTER]++);
-                    registers[target] = memory->getLong(address);
+                    registers[target] = memory->getLong(registers[address]);
                     break;
                 }
             case bytecode::STORE_1:
                 {
                     const uint8_t address = memory->getByte(registers[bytecode::PC_REGISTER]++);
                     const uint8_t source = memory->getByte(registers[bytecode::PC_REGISTER]++);
-                    memory->setByte(address, registers[source]);
+                    memory->setByte(registers[address], registers[source]);
                     break;
                 }
             case bytecode::STORE_2:
                 {
                     const uint8_t address = memory->getByte(registers[bytecode::PC_REGISTER]++);
                     const uint8_t source = memory->getByte(registers[bytecode::PC_REGISTER]++);
-                    memory->setShort(address, registers[source]);
+                    memory->setShort(registers[address], registers[source]);
                     break;
                 }
             case bytecode::STORE_4:
                 {
                     const uint8_t address = memory->getByte(registers[bytecode::PC_REGISTER]++);
                     const uint8_t source = memory->getByte(registers[bytecode::PC_REGISTER]++);
-                    memory->setInt(address, registers[source]);
+                    memory->setInt(registers[address], registers[source]);
                     break;
                 }
             case bytecode::STORE_8:
                 {
                     const uint8_t address = memory->getByte(registers[bytecode::PC_REGISTER]++);
                     const uint8_t source = memory->getByte(registers[bytecode::PC_REGISTER]++);
-                    memory->setLong(address, registers[source]);
+                    memory->setLong(registers[address], registers[source]);
                     break;
                 }
             case bytecode::CMP:
@@ -336,8 +337,8 @@ namespace lvm
                     {
                         if (type == bytecode::BYTE_TYPE)
                         {
-                            value1 = static_cast<int8_t>(value1 & 0xff);
-                            value2 = static_cast<int8_t>(value2 & 0xff);
+                            value1 = std::bit_cast<int8_t>(static_cast<uint8_t>(value1 & 0xff));
+                            value2 = std::bit_cast<int8_t>(static_cast<uint8_t>(value2 & 0xff));
                         }
                         else if (type == bytecode::SHORT_TYPE)
                         {
@@ -363,7 +364,7 @@ namespace lvm
                             bool signedResult = value1 < value2;
                             bool unsignedResult = std::bit_cast<uint64_t>(value1) < std::bit_cast<uint64_t>(value2);
                             flags = (flags & ~bytecode::ZERO_MASK & ~bytecode::CARRY_MASK & ~bytecode::UNSIGNED_MASK) |
-                                ((signedResult ? 1 : 0) << 1) | ((unsignedResult ? 1 : 0) << 2);
+                                (signedResult ? bytecode::CARRY_MASK : 0) | (unsignedResult ? bytecode::UNSIGNED_MASK : 0);
                         }
                     }
                     registers[bytecode::FLAGS_REGISTER] = flags;
@@ -572,21 +573,21 @@ namespace lvm
                 }
             case bytecode::JE:
                 {
-                    const uint8_t address = memory->getByte(registers[bytecode::PC_REGISTER]);
+                    const uint8_t address = memory->getByte(registers[bytecode::PC_REGISTER]++);
                     if ((registers[bytecode::FLAGS_REGISTER] & bytecode::ZERO_MASK) != 0)
                         registers[bytecode::PC_REGISTER] = registers[address];
                     break;
                 }
             case bytecode::JNE:
                 {
-                    const uint8_t address = memory->getByte(registers[bytecode::PC_REGISTER]);
+                    const uint8_t address = memory->getByte(registers[bytecode::PC_REGISTER]++);
                     if ((registers[bytecode::FLAGS_REGISTER] & bytecode::ZERO_MASK) == 0)
                         registers[bytecode::PC_REGISTER] = registers[address];
                     break;
                 }
             case bytecode::JL:
                 {
-                    const uint8_t address = memory->getByte(registers[bytecode::PC_REGISTER]);
+                    const uint8_t address = memory->getByte(registers[bytecode::PC_REGISTER]++);
                     if (const uint64_t flags = registers[bytecode::FLAGS_REGISTER]; ((flags & bytecode::ZERO_MASK) == 0)
                         && ((flags & bytecode::CARRY_MASK) != 0))
                         registers[bytecode::PC_REGISTER] = registers[address];
@@ -595,7 +596,7 @@ namespace lvm
             case bytecode::JLE:
                 {
                     const uint8_t address = memory->getByte(registers[bytecode::PC_REGISTER]++);
-                    if (const uint64_t flags = registers[bytecode::FLAGS_REGISTER]; ((flags & bytecode::ZERO_MASK) == 0)
+                    if (const uint64_t flags = registers[bytecode::FLAGS_REGISTER]; ((flags & bytecode::ZERO_MASK) != 0)
                         || ((flags & bytecode::CARRY_MASK) != 0))
                         registers[bytecode::PC_REGISTER] = registers[address];
                     break;
@@ -611,7 +612,7 @@ namespace lvm
             case bytecode::JGE:
                 {
                     const uint8_t address = memory->getByte(registers[bytecode::PC_REGISTER]++);
-                    if (const uint64_t flags = registers[bytecode::FLAGS_REGISTER]; ((flags & bytecode::ZERO_MASK) == 0)
+                    if (const uint64_t flags = registers[bytecode::FLAGS_REGISTER]; ((flags & bytecode::ZERO_MASK) != 0)
                         || ((flags & bytecode::CARRY_MASK) == 0))
                         registers[bytecode::PC_REGISTER] = registers[address];
                     break;
@@ -652,7 +653,7 @@ namespace lvm
                 {
                     const uint8_t size = memory->getByte(registers[bytecode::PC_REGISTER]++);
                     const uint8_t target = memory->getByte(registers[bytecode::PC_REGISTER]++);
-                    registers[target] = memory->allocateMemory(size);
+                    registers[target] = memory->allocateMemory(registers[size]);
                     break;
                 }
             case bytecode::FREE:
@@ -1658,10 +1659,9 @@ namespace lvm
 
     void ExecutionUnit::destroy()
     {
-        this->_mutex.lock();
+        std::lock_guard lock(_mutex);
         delete[] registers;
         registers = nullptr;
-        this->_mutex.unlock();
     }
 
 
