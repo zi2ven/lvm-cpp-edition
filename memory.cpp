@@ -162,7 +162,7 @@ namespace lvm
 
     void Memory::freeMemory(ThreadHandle* threadHandle, uint64_t address)
     {
-        // std::lock_guard lock(_mutex);
+        std::lock_guard lock(_mutex);
         address -= 8;
         const uint64_t size = this->getLong(threadHandle, address) + 8;
         FreeMemory* freeMemory = this->freeMemoryList;

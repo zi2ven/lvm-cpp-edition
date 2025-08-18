@@ -49,7 +49,7 @@ namespace lvm
         std::map<uint64_t, FileHandle*> fd2FileHandle;
         uint64_t lastFd = 0;
         uint64_t lastThreadID = 0;
-        std::mutex _mutex;
+        std::recursive_mutex _mutex;
 
         ExecutionUnit* createExecutionUnit(ThreadHandle* threadHandle, uint64_t entryPoint);
         void destroyThread(const ThreadHandle* threadHandle);
@@ -145,7 +145,7 @@ namespace lvm
 
     private:
         std::recursive_mutex _mutex;
-        std::mutex _lock;
+        std::recursive_mutex _lock;
 
         MemoryPage* getMemoryPageSafely(uint64_t address);
         MemoryPage* getMemoryPage(uint64_t address);
@@ -191,7 +191,7 @@ namespace lvm
     private:
         uint64_t _start;
         uint8_t* data = nullptr;
-        std::mutex _mutex;
+        std::recursive_mutex _mutex;
     };
 
     class FreeMemory

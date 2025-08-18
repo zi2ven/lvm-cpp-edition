@@ -133,7 +133,6 @@ namespace lvm
         uint64_t threadID = this->lastThreadID + 1;
         while (this->threadID2Handle.contains(threadID)) ++threadID;
         this->lastThreadID = threadID;
-        this->_mutex.unlock();
         return threadID;
     }
 
