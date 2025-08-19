@@ -1,7 +1,7 @@
 #include <iostream>
 #include <argparse/argparse.hpp>
 
-#include "vm_new.h"
+#include "vm.h"
 
 int read_file_to_buffer(const std::string& path, uint8_t*& raw, size_t& size)
 {

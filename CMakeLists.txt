@@ -6,12 +6,9 @@ set(CMAKE_CXX_STANDARD 20)
 include_directories(argparse/include)
 
 add_executable(lvm_cpp_edition main.cpp
-#        vm.cpp
-#        vm.h
-#        memory.cpp
-        vm_new.cpp
-        vm_new.h
-        memory_new.cpp
+        vm.cpp
+        vm.h
+        memory.cpp
         module.h
         module.cpp
         bytecode.h
