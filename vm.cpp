@@ -10,7 +10,7 @@
 #include "bytecode.h"
 #include "exception.h"
 #include "module.h"
-#include "vm_new.h"
+#include "vm.h"
 
 namespace lvm
 {
