@@ -71,17 +71,17 @@ int main(int argc, const char** argv)
     }
     const lvm::Module* module = lvm::Module::fromRaw(raw);
     free(raw);
-    // auto start = std::chrono::high_resolution_clock::now();
+    // const auto start = std::chrono::high_resolution_clock::now();
     vm->init(module);
-    // auto end = std::chrono::high_resolution_clock::now();
-    // auto duration1 = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+    // const auto end = std::chrono::high_resolution_clock::now();
+    // const auto duration1 = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
     // std::cout << "Init time: " << duration1.count() << " us" << std::endl;
-    // auto rStart = std::chrono::high_resolution_clock::now();
+    // const auto rStart = std::chrono::high_resolution_clock::now();
     vm->run();
-    // auto rEnd = std::chrono::high_resolution_clock::now();
-    // auto duration2 = std::chrono::duration_cast<std::chrono::microseconds>(rEnd - rStart);
+    // const auto rEnd = std::chrono::high_resolution_clock::now();
+    // const auto duration2 = std::chrono::duration_cast<std::chrono::microseconds>(rEnd - rStart);
     // std::cout << "Execution time: " << duration2.count() << " us" << std::endl;
-    // auto duration3 = std::chrono::duration_cast<std::chrono::microseconds>(duration2 + duration1);
+    // const auto duration3 = std::chrono::duration_cast<std::chrono::microseconds>(duration2 + duration1);
     // std::cout << "Total time: " << duration3.count() << " us" << std::endl;
     vm->destroy();
     delete vm;

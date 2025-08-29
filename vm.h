@@ -28,6 +28,11 @@ namespace lvm
     constexpr uint64_t DEFAULT_STACK_SIZE = 4 * 1024 * 1024;
     constexpr uint64_t DEFAULT_MEMORY_SIZE = 1024 * 1024 * 1024;
     constexpr uint64_t LVM_VERSION = 0;
+#if defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
+    constexpr uint8_t ENDIAN = 0;
+#else
+    constexpr uint8_t ENDIAN = 1;
+#endif
 
     class VirtualMachine;
     class ThreadHandle;
@@ -51,10 +56,10 @@ namespace lvm
         void destroy();
         int run();
         uint64_t createThread(ThreadHandle* threadHandle, uint64_t entryPoint);
-        uint64_t open(const char* path, uint32_t flags, uint32_t mode);
-        uint64_t close(uint64_t fd);
-        uint32_t read(uint64_t fd, uint8_t* buffer, uint32_t count);
-        uint32_t write(uint64_t fd, const uint8_t* buffer, uint32_t count);
+        inline uint64_t open(const char* path, uint32_t flags, uint32_t mode);
+        inline uint64_t close(uint64_t fd);
+        inline uint32_t read(uint64_t fd, uint8_t* buffer, uint32_t count);
+        inline uint32_t write(uint64_t fd, const uint8_t* buffer, uint32_t count);
         void exit(uint64_t status);
 
     private:
@@ -111,8 +116,8 @@ namespace lvm
         FileHandle(std::string path, uint32_t flags, uint32_t mode, FILE* input, FILE* output);
         FileHandle(std::string path, uint32_t flags, uint32_t mode);
         ~FileHandle();
-        uint32_t _read(uint8_t* buffer, uint32_t count) const;
-        uint32_t _write(const uint8_t* buffer, uint32_t count) const;
+        inline uint32_t _read(uint8_t* buffer, uint32_t count) const;
+        inline uint32_t _write(const uint8_t* buffer, uint32_t count) const;
 
     private:
         static constexpr uint32_t FH_PREOPEN = 1 << 2;
