@@ -54,20 +54,20 @@ namespace lvm
                     }
                     else if (mbi.State == MEM_COMMIT)
                     {
-                        // std::cout << "Page is committed but access violation occurred (permissions issue?)" <<
-                        // std::endl;
+                        std::cout << "Page is committed but access violation occurred (permissions issue?)" <<
+                            std::endl;
                     }
                     else if (mbi.State == MEM_FREE)
                     {
-                        // std::cout << "Page is free (not reserved)" << std::endl;
+                        std::cout << "Page is free (not reserved)" << std::endl;
                     }
                 }
             }
             else
             {
-                // std::cout << "Access violation outside managed memory range" << std::endl;
-                // std::cout << "Faulting address: " << faultAddress << std::endl;
-                // std::cout << "Range: " << memory->heap << " - " << memory->heap + memory->heapSize << std::endl;
+                std::cout << "Access violation outside managed memory range" << std::endl;
+                std::cout << "Faulting address: " << faultAddress << std::endl;
+                std::cout << "Range: " << memory->heap << " - " << memory->heap + memory->heapSize << std::endl;
             }
         }
 
@@ -91,6 +91,7 @@ namespace lvm
         freeMemory->next = new FreeMemory(0, heapSize);
         freeMemoryList = freeMemory;
     }
+
     bool Memory::setReadonly(uint64_t address, uint64_t size)
     {
         DWORD oldProtection;
@@ -232,14 +233,16 @@ namespace lvm
     {
         std::lock_guard lock(_mutex);
         const uint64_t length = size + 8;
-        FreeMemory* freeMemory = this->freeMemoryList;
+        FreeMemory* freeMemory = this->freeMemoryList->next;
         while (freeMemory != nullptr)
         {
             if (freeMemory->end - freeMemory->start >= length)
             {
                 const uint64_t start = freeMemory->start;
                 freeMemory->start += length;
-                *reinterpret_cast<uint64_t*>(reinterpret_cast<uint64_t>(heap) + start) = size;
+                const uint64_t ptr = reinterpret_cast<uint64_t>(heap) + start;
+                setReadwrite(ptr, length);
+                *reinterpret_cast<uint64_t*>(ptr) = size;
                 return start + 8;
             }
             freeMemory = freeMemory->next;
@@ -250,7 +253,7 @@ namespace lvm
     uint64_t Memory::reallocateMemory(ThreadHandle* threadHandle, uint64_t address, uint64_t newSize)
     {
         std::lock_guard lock(_mutex);
-        const uint64_t heap = reinterpret_cast<uint64_t>(this->heap);
+        const auto heap = reinterpret_cast<uint64_t>(this->heap);
         const uint64_t oldSize = *reinterpret_cast<uint64_t*>(heap + address - 8);
         auto* bytes = new uint8_t[oldSize];
         memcpy(bytes, reinterpret_cast<void*>(heap + address), oldSize);
@@ -266,7 +269,7 @@ namespace lvm
         std::lock_guard lock(_mutex);
         address -= 8;
         const uint64_t size = *reinterpret_cast<uint64_t*>(reinterpret_cast<uint64_t>(heap) + address) + 8;
-        FreeMemory* freeMemory = this->freeMemoryList;
+        FreeMemory* freeMemory = this->freeMemoryList->next;
         while (freeMemory->next != nullptr)
         {
             if (freeMemory->end == address)
@@ -297,7 +300,7 @@ namespace lvm
     uint64_t Memory::allocateMemoryWithoutHead(ThreadHandle* threadHandle, uint64_t size)
     {
         std::lock_guard lock(_mutex);
-        FreeMemory* freeMemory = this->freeMemoryList;
+        FreeMemory* freeMemory = this->freeMemoryList->next;
         while (freeMemory != nullptr)
         {
             if (freeMemory->end - freeMemory->start >= size)

@@ -12,17 +12,17 @@
 #include "module.h"
 #include "vm.h"
 
-#if defined(_MSC_VER)
+#ifdef _MSC_VER
 #define USE_SWITCH_DISPATCH
 #endif
 
 #ifdef USE_SWITCH_DISPATCH
 #define TARGET(opcode) case (opcode)
-#define  DISPATCH(opcode) break
+#define DISPATCH(opcode) break
 #else
 #define TARGET(opcode) opcode
+#define DISPATCH() goto end_dispatch
 #define DISPATCH_TABLE_ENTRY(opcode) &&opcode
-#define  DISPATCH() goto end_dispatch
 #endif
 
 
