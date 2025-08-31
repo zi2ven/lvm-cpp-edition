@@ -54,20 +54,20 @@ namespace lvm
                     }
                     else if (mbi.State == MEM_COMMIT)
                     {
-                        std::cout << "Page is committed but access violation occurred (permissions issue?)" <<
-                            std::endl;
+                        // std::cout << "Page is committed but access violation occurred (permissions issue?)" <<
+                            // std::endl;
                     }
                     else if (mbi.State == MEM_FREE)
                     {
-                        std::cout << "Page is free (not reserved)" << std::endl;
+                        // std::cout << "Page is free (not reserved)" << std::endl;
                     }
                 }
             }
             else
             {
-                std::cout << "Access violation outside managed memory range" << std::endl;
-                std::cout << "Faulting address: " << faultAddress << std::endl;
-                std::cout << "Range: " << memory->heap << " - " << memory->heap + memory->heapSize << std::endl;
+                // std::cout << "Access violation outside managed memory range" << std::endl;
+                // std::cout << "Faulting address: " << faultAddress << std::endl;
+                // std::cout << "Range: " << memory->heap << " - " << memory->heap + memory->heapSize << std::endl;
             }
         }
 
