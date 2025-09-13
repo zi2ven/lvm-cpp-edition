@@ -1648,14 +1648,18 @@ namespace lvm
         }
     TARGET(EXIT):
         {
-            const uint8_t statusRegister = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]);
-            virtualMachine->exit(registers[statusRegister]);
+            {
+                const uint8_t statusRegister = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]);
+                virtualMachine->exit(registers[statusRegister]);
+            }
             goto end;
         }
     TARGET(EXIT_IMMEDIATE):
         {
-            const uint64_t status = *reinterpret_cast<uint64_t*>(base + registers[PC_REGISTER]);
-            virtualMachine->exit(status);
+            {
+                const uint64_t status = *reinterpret_cast<uint64_t*>(base + registers[PC_REGISTER]);
+                virtualMachine->exit(status);
+            }
             goto end;
         }
     TARGET(GET_FIELD_ADDRESS):
