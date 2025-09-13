@@ -22,7 +22,7 @@
 #else
 #define TARGET(opcode) opcode
 #define DISPATCH() goto end_dispatch
-#define DISPATCH_TABLE_ENTRY(opcode) &&opcode
+#define DISPATCH_TABLE_ENTRY(opcode) [opcode] = &&opcode
 #endif
 
 
