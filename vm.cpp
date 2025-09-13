@@ -263,7 +263,8 @@ namespace lvm
             DISPATCH_TABLE_ENTRY(LOAD_PARAMETER),DISPATCH_TABLE_ENTRY(STORE_PARAMETER),
             DISPATCH_TABLE_ENTRY(JUMP_IF_TRUE), DISPATCH_TABLE_ENTRY(JUMP_IF_FALSE),DISPATCH_TABLE_ENTRY(SYSCALL),
             DISPATCH_TABLE_ENTRY(THREAD_FINISH), DISPATCH_TABLE_ENTRY(NEG_DOUBLE), DISPATCH_TABLE_ENTRY(NEG_FLOAT),
-            DISPATCH_TABLE_ENTRY(ATOMIC_NEG_DOUBLE), DISPATCH_TABLE_ENTRY(ATOMIC_NEG_FLOAT)
+            DISPATCH_TABLE_ENTRY(ATOMIC_NEG_DOUBLE), DISPATCH_TABLE_ENTRY(ATOMIC_NEG_FLOAT), DISPATCH_TABLE_ENTRY(JIT_FOR_RANGE),
+            DISPATCH_TABLE_ENTRY(INVOKE_NATIVE),
         };
         DISPATCH();
 #endif
@@ -2028,6 +2029,8 @@ namespace lvm
         {
             {
                 // TODO
+                uint8_t startRegister = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                uint8_t lengthRegister = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
             }
             DISPATCH();
         }
