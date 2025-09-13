@@ -16,4 +16,4 @@ add_executable(lvm_cpp_edition main.cpp
         exception.cpp
         bytecode.cpp
 )
-set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+set(CMAKE_CXX_FLAGS_RELEASE "-Ofast")

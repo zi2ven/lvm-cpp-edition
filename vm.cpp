@@ -269,233 +269,1166 @@ namespace lvm
 #endif
     TARGET(NOP):
         {
+            {
+            }
             DISPATCH();
         }
     TARGET(PUSH_1):
         {
-            const uint8_t reg = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            --registers[SP_REGISTER];
-            *reinterpret_cast<uint8_t*>(base + registers[SP_REGISTER]) = registers[reg];
+            {
+                const uint8_t reg = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                --registers[SP_REGISTER];
+                *reinterpret_cast<uint8_t*>(base + registers[SP_REGISTER]) = registers[reg];
+            }
             DISPATCH();
         }
     TARGET(PUSH_2):
         {
-            const uint8_t reg = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[SP_REGISTER] -= 2;
-            *reinterpret_cast<uint16_t*>(base + registers[SP_REGISTER]) = registers[reg];
+            {
+                const uint8_t reg = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[SP_REGISTER] -= 2;
+                *reinterpret_cast<uint16_t*>(base + registers[SP_REGISTER]) = registers[reg];
+            }
             DISPATCH();
         }
     TARGET(PUSH_4):
         {
-            const uint8_t reg = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[SP_REGISTER] -= 4;
-            *reinterpret_cast<uint32_t*>(base + registers[SP_REGISTER]) = registers[reg];
+            {
+                const uint8_t reg = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[SP_REGISTER] -= 4;
+                *reinterpret_cast<uint32_t*>(base + registers[SP_REGISTER]) = registers[reg];
+            }
             DISPATCH();
         }
     TARGET(PUSH_8):
         {
-            const uint8_t reg = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[SP_REGISTER] -= 8;
-            *reinterpret_cast<uint64_t*>(base + registers[SP_REGISTER]) = registers[reg];
+            {
+                const uint8_t reg = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[SP_REGISTER] -= 8;
+                *reinterpret_cast<uint64_t*>(base + registers[SP_REGISTER]) = registers[reg];
+            }
             DISPATCH();
         }
     TARGET(POP_1):
         {
-            const uint8_t reg = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[reg] = *reinterpret_cast<uint8_t*>(base + registers[SP_REGISTER]);
-            ++registers[SP_REGISTER];
+            {
+                const uint8_t reg = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[reg] = *reinterpret_cast<uint8_t*>(base + registers[SP_REGISTER]);
+                ++registers[SP_REGISTER];
+            }
             DISPATCH();
         }
     TARGET(POP_2):
         {
-            const uint8_t reg = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[reg] = *reinterpret_cast<uint16_t*>(base + registers[SP_REGISTER]);
-            registers[SP_REGISTER] += 2;
+            {
+                const uint8_t reg = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[reg] = *reinterpret_cast<uint16_t*>(base + registers[SP_REGISTER]);
+                registers[SP_REGISTER] += 2;
+            }
             DISPATCH();
         }
     TARGET(POP_4):
         {
-            const uint8_t reg = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[reg] = *reinterpret_cast<uint32_t*>(base + registers[SP_REGISTER]);
-            registers[SP_REGISTER] += 4;
+            {
+                const uint8_t reg = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[reg] = *reinterpret_cast<uint32_t*>(base + registers[SP_REGISTER]);
+                registers[SP_REGISTER] += 4;
+            }
             DISPATCH();
         }
     TARGET(POP_8):
         {
-            const uint8_t reg = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[reg] = *reinterpret_cast<uint64_t*>(base + registers[SP_REGISTER]);
-            registers[SP_REGISTER] += 8;
+            {
+                const uint8_t reg = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[reg] = *reinterpret_cast<uint64_t*>(base + registers[SP_REGISTER]);
+                registers[SP_REGISTER] += 8;
+            }
             DISPATCH();
         }
     TARGET(LOAD_1):
         {
-            const uint8_t address = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[target] = *reinterpret_cast<uint8_t*>(base + registers[address]);
+            {
+                const uint8_t address = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[target] = *reinterpret_cast<uint8_t*>(base + registers[address]);
+            }
             DISPATCH();
         }
     TARGET(LOAD_2):
         {
-            const uint8_t address = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[target] = *reinterpret_cast<uint16_t*>(base + registers[address]);
+            {
+                const uint8_t address = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[target] = *reinterpret_cast<uint16_t*>(base + registers[address]);
+            }
             DISPATCH();
         }
     TARGET(LOAD_4):
         {
-            const uint8_t address = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[target] = *reinterpret_cast<uint32_t*>(base + registers[address]);
+            {
+                const uint8_t address = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[target] = *reinterpret_cast<uint32_t*>(base + registers[address]);
+            }
             DISPATCH();
         }
     TARGET(LOAD_8):
         {
-            const uint8_t address = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[target] = *reinterpret_cast<uint64_t*>(base + registers[address]);
+            {
+                const uint8_t address = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[target] = *reinterpret_cast<uint64_t*>(base + registers[address]);
+            }
             DISPATCH();
         }
     TARGET(STORE_1):
         {
-            const uint8_t address = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t source = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            *reinterpret_cast<uint8_t*>(base + registers[address]) = registers[source];
+            {
+                const uint8_t address = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t source = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                *reinterpret_cast<uint8_t*>(base + registers[address]) = registers[source];
+            }
             DISPATCH();
         }
     TARGET(STORE_2):
         {
-            const uint8_t address = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t source = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            *reinterpret_cast<uint16_t*>(base + registers[address]) = registers[source];
+            {
+                const uint8_t address = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t source = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                *reinterpret_cast<uint16_t*>(base + registers[address]) = registers[source];
+            }
             DISPATCH();
         }
     TARGET(STORE_4):
         {
-            const uint8_t address = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t source = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            *reinterpret_cast<uint32_t*>(base + registers[address]) = registers[source];
+            {
+                const uint8_t address = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t source = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                *reinterpret_cast<uint32_t*>(base + registers[address]) = registers[source];
+            }
             DISPATCH();
         }
     TARGET(STORE_8):
         {
-            const uint8_t address = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t source = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            *reinterpret_cast<uint64_t*>(base + registers[address]) = registers[source];
+            {
+                const uint8_t address = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t source = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                *reinterpret_cast<uint64_t*>(base + registers[address]) = registers[source];
+            }
             DISPATCH();
         }
     TARGET(CMP):
         {
-            const uint8_t type = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            auto value1 = static_cast<int64_t>(registers[operand1]);
-            auto value2 = static_cast<int64_t>(registers[operand2]);
-            uint64_t flags = registers[FLAGS_REGISTER];
-            if (type == FLOAT_TYPE)
             {
-                const auto float1 = std::bit_cast<float>(static_cast<uint32_t>(value1 & 0xFFFFFFFFL));
-                const auto float2 = std::bit_cast<float>(static_cast<uint32_t>(value2 & 0xFFFFFFFFL));
-                const bool result = float1 < float2;
-                flags = (flags & ~ZERO_MASK & ~CARRY_MASK & ~UNSIGNED_MASK) | ((
-                    result ? 0b11 : 0b00) << 1);
-            }
-            else if (type == DOUBLE_TYPE)
-            {
-                const auto float1 = std::bit_cast<double>(value1);
-                const auto float2 = std::bit_cast<double>(value2);
-                const bool result = float1 < float2;
-                flags = (flags & ~ZERO_MASK & ~CARRY_MASK & ~UNSIGNED_MASK) | ((
-                    result ? 0b11 : 0b00) << 1);
-            }
-            else
-            {
-                if (type == BYTE_TYPE)
+                const uint8_t type = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                auto value1 = static_cast<int64_t>(registers[operand1]);
+                auto value2 = static_cast<int64_t>(registers[operand2]);
+                uint64_t flags = registers[FLAGS_REGISTER];
+                if (type == FLOAT_TYPE)
                 {
-                    value1 = std::bit_cast<int8_t>(static_cast<uint8_t>(value1 & 0xff));
-                    value2 = std::bit_cast<int8_t>(static_cast<uint8_t>(value2 & 0xff));
+                    const auto float1 = std::bit_cast<float>(static_cast<uint32_t>(value1 & 0xFFFFFFFFL));
+                    const auto float2 = std::bit_cast<float>(static_cast<uint32_t>(value2 & 0xFFFFFFFFL));
+                    const bool result = float1 < float2;
+                    flags = (flags & ~ZERO_MASK & ~CARRY_MASK & ~UNSIGNED_MASK) | ((
+                        result ? 0b11 : 0b00) << 1);
                 }
-                else if (type == SHORT_TYPE)
+                else if (type == DOUBLE_TYPE)
                 {
-                    value1 = static_cast<int16_t>(value1 & 0xffff);
-                    value2 = static_cast<int16_t>(value2 & 0xffff);
-                }
-                else if (type == INT_TYPE)
-                {
-                    value1 = static_cast<int32_t>(value1 & 0xffffffffL);
-                    value2 = static_cast<int32_t>(value2 & 0xffffffffL);
-                }
-                else if (type != LONG_TYPE)
-                {
-                    throw VMException("Unsupported type");
-                }
-                if (value1 == value2)
-                {
-                    flags = (flags & ~ZERO_MASK & ~CARRY_MASK & ~UNSIGNED_MASK) |
-                        1;
+                    const auto float1 = std::bit_cast<double>(value1);
+                    const auto float2 = std::bit_cast<double>(value2);
+                    const bool result = float1 < float2;
+                    flags = (flags & ~ZERO_MASK & ~CARRY_MASK & ~UNSIGNED_MASK) | ((
+                        result ? 0b11 : 0b00) << 1);
                 }
                 else
                 {
-                    bool signedResult = value1 < value2;
-                    bool unsignedResult = std::bit_cast<uint64_t>(value1) < std::bit_cast<uint64_t>(value2);
-                    flags = (flags & ~ZERO_MASK & ~CARRY_MASK & ~UNSIGNED_MASK) |
-                        (signedResult ? CARRY_MASK : 0) | (unsignedResult
-                                                               ? UNSIGNED_MASK
-                                                               : 0);
+                    if (type == BYTE_TYPE)
+                    {
+                        value1 = std::bit_cast<int8_t>(static_cast<uint8_t>(value1 & 0xff));
+                        value2 = std::bit_cast<int8_t>(static_cast<uint8_t>(value2 & 0xff));
+                    }
+                    else if (type == SHORT_TYPE)
+                    {
+                        value1 = static_cast<int16_t>(value1 & 0xffff);
+                        value2 = static_cast<int16_t>(value2 & 0xffff);
+                    }
+                    else if (type == INT_TYPE)
+                    {
+                        value1 = static_cast<int32_t>(value1 & 0xffffffffL);
+                        value2 = static_cast<int32_t>(value2 & 0xffffffffL);
+                    }
+                    else if (type != LONG_TYPE)
+                    {
+                        throw VMException("Unsupported type");
+                    }
+                    if (value1 == value2)
+                    {
+                        flags = (flags & ~ZERO_MASK & ~CARRY_MASK & ~UNSIGNED_MASK) |
+                            1;
+                    }
+                    else
+                    {
+                        bool signedResult = value1 < value2;
+                        bool unsignedResult = std::bit_cast<uint64_t>(value1) < std::bit_cast<uint64_t>(value2);
+                        flags = (flags & ~ZERO_MASK & ~CARRY_MASK & ~UNSIGNED_MASK) |
+                            (signedResult ? CARRY_MASK : 0) | (unsignedResult
+                                                                   ? UNSIGNED_MASK
+                                                                   : 0);
+                    }
                 }
+                registers[FLAGS_REGISTER] = flags;
             }
-            registers[FLAGS_REGISTER] = flags;
             DISPATCH();
         }
     TARGET(ATOMIC_CMP):
         {
-            memory->lock();
-            const uint8_t type = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            auto value1 = static_cast<int64_t>(*reinterpret_cast<uint64_t*>(base + registers[operand1]));
-            auto value2 = static_cast<int64_t>(registers[operand2]);
-            uint64_t flags = registers[FLAGS_REGISTER];
-            if (type == FLOAT_TYPE)
             {
-                const auto float1 = std::bit_cast<float>(static_cast<uint32_t>(value1 & 0xFFFFFFFFL));
-                const auto float2 = std::bit_cast<float>(static_cast<uint32_t>(value2 & 0xFFFFFFFFL));
-                const bool result = float1 < float2;
-                flags = (flags & ~ZERO_MASK & ~CARRY_MASK & ~UNSIGNED_MASK) | ((
-                    result ? 0b11 : 0b00) << 1);
+                memory->lock();
+                const uint8_t type = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                auto value1 = static_cast<int64_t>(*reinterpret_cast<uint64_t*>(base + registers[operand1]));
+                auto value2 = static_cast<int64_t>(registers[operand2]);
+                uint64_t flags = registers[FLAGS_REGISTER];
+                if (type == FLOAT_TYPE)
+                {
+                    const auto float1 = std::bit_cast<float>(static_cast<uint32_t>(value1 & 0xFFFFFFFFL));
+                    const auto float2 = std::bit_cast<float>(static_cast<uint32_t>(value2 & 0xFFFFFFFFL));
+                    const bool result = float1 < float2;
+                    flags = (flags & ~ZERO_MASK & ~CARRY_MASK & ~UNSIGNED_MASK) | ((
+                        result ? 0b11 : 0b00) << 1);
+                }
+                else if (type == DOUBLE_TYPE)
+                {
+                    const auto float1 = std::bit_cast<double>(value1);
+                    const auto float2 = std::bit_cast<double>(value2);
+                    const bool result = float1 < float2;
+                    flags = (flags & ~ZERO_MASK & ~CARRY_MASK & ~UNSIGNED_MASK) | ((
+                        result ? 0b11 : 0b00) << 1);
+                }
+                else
+                {
+                    if (type == BYTE_TYPE)
+                    {
+                        value1 = static_cast<int8_t>(value1 & 0xff);
+                        value2 = static_cast<int8_t>(value2 & 0xff);
+                    }
+                    else if (type == SHORT_TYPE)
+                    {
+                        value1 = static_cast<int16_t>(value1 & 0xffff);
+                        value2 = static_cast<int16_t>(value2 & 0xffff);
+                    }
+                    else if (type == INT_TYPE)
+                    {
+                        value1 = static_cast<int32_t>(value1 & 0xffffffffL);
+                        value2 = static_cast<int32_t>(value2 & 0xffffffffL);
+                    }
+                    else if (type != LONG_TYPE)
+                    {
+                        throw VMException("Unsupported type");
+                    }
+                    if (value1 == value2)
+                    {
+                        flags = (flags & ~ZERO_MASK & ~CARRY_MASK & ~UNSIGNED_MASK) |
+                            1;
+                    }
+                    else
+                    {
+                        bool signedResult = value1 < value2;
+                        bool unsignedResult = std::bit_cast<uint64_t>(value1) < std::bit_cast<uint64_t>(value2);
+                        flags = (flags & ~ZERO_MASK & ~CARRY_MASK & ~UNSIGNED_MASK) |
+                            ((signedResult ? 1 : 0) << 1) | ((unsignedResult ? 1 : 0) << 2);
+                    }
+                }
+                registers[FLAGS_REGISTER] = flags;
+                memory->unlock();
             }
-            else if (type == DOUBLE_TYPE)
+            DISPATCH();
+        }
+    TARGET(MOV_E):
+        {
             {
-                const auto float1 = std::bit_cast<double>(value1);
-                const auto float2 = std::bit_cast<double>(value2);
-                const bool result = float1 < float2;
-                flags = (flags & ~ZERO_MASK & ~CARRY_MASK & ~UNSIGNED_MASK) | ((
-                    result ? 0b11 : 0b00) << 1);
+                const uint8_t value = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                if ((registers[FLAGS_REGISTER] & ZERO_MASK) != 0)
+                    registers[target] = registers[value];
             }
-            else
+            DISPATCH();
+        }
+    TARGET(MOV_NE):
+        {
             {
-                if (type == BYTE_TYPE)
-                {
-                    value1 = static_cast<int8_t>(value1 & 0xff);
-                    value2 = static_cast<int8_t>(value2 & 0xff);
-                }
-                else if (type == SHORT_TYPE)
-                {
-                    value1 = static_cast<int16_t>(value1 & 0xffff);
-                    value2 = static_cast<int16_t>(value2 & 0xffff);
-                }
-                else if (type == INT_TYPE)
-                {
-                    value1 = static_cast<int32_t>(value1 & 0xffffffffL);
-                    value2 = static_cast<int32_t>(value2 & 0xffffffffL);
-                }
-                else if (type != LONG_TYPE)
-                {
-                    throw VMException("Unsupported type");
-                }
+                const uint8_t value = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                if ((registers[FLAGS_REGISTER] & ZERO_MASK) == 0)
+                    registers[target] = registers[value];
+            }
+            DISPATCH();
+        }
+    TARGET(MOV_L):
+        {
+            {
+                const uint8_t value = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                if (const uint64_t flags = registers[FLAGS_REGISTER]; ((flags & ZERO_MASK) == 0)
+                    && ((flags & CARRY_MASK) != 0))
+                    registers[target] = registers[value];
+            }
+            DISPATCH();
+        }
+    TARGET(MOV_LE):
+        {
+            {
+                const uint8_t value = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                if (const uint64_t flags = registers[FLAGS_REGISTER]; ((flags & ZERO_MASK) != 0)
+                    || ((flags & CARRY_MASK) != 0))
+                    registers[target] = registers[value];
+            }
+            DISPATCH();
+        }
+    TARGET(MOV_G):
+        {
+            {
+                const uint8_t value = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                if (const uint64_t flags = registers[FLAGS_REGISTER]; ((flags & ZERO_MASK) == 0)
+                    && ((flags & CARRY_MASK) == 0))
+                    registers[target] = registers[value];
+            }
+            DISPATCH();
+        }
+    TARGET(MOV_GE):
+        {
+            {
+                const uint8_t value = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                if (const uint64_t flags = registers[FLAGS_REGISTER]; ((flags & ZERO_MASK) != 0)
+                    || ((flags & CARRY_MASK) == 0))
+                    registers[target] = registers[value];
+            }
+            DISPATCH();
+        }
+    TARGET(MOV_UL):
+        {
+            {
+                const uint8_t value = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                if (const uint64_t flags = registers[FLAGS_REGISTER]; ((flags & ZERO_MASK) == 0)
+                    && ((flags & UNSIGNED_MASK) != 0))
+                    registers[target] = registers[value];
+            }
+            DISPATCH();
+        }
+    TARGET(MOV_ULE):
+        {
+            {
+                const uint8_t value = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                if (const uint64_t flags = registers[FLAGS_REGISTER]; ((flags & ZERO_MASK) != 0)
+                    || ((flags & UNSIGNED_MASK) != 0))
+                    registers[target] = registers[value];
+            }
+            DISPATCH();
+        }
+    TARGET(MOV_UG):
+        {
+            {
+                const uint8_t value = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                if (const uint64_t flags = registers[FLAGS_REGISTER]; ((flags & ZERO_MASK) == 0)
+                    && ((flags & UNSIGNED_MASK) == 0))
+                    registers[target] = registers[value];
+            }
+            DISPATCH();
+        }
+    TARGET(MOV_UGE):
+        {
+            {
+                const uint8_t value = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                if (const uint64_t flags = registers[FLAGS_REGISTER]; ((flags & ZERO_MASK) != 0)
+                    || ((flags & UNSIGNED_MASK) == 0))
+                    registers[target] = registers[value];
+            }
+            DISPATCH();
+        }
+    TARGET(MOV):
+        {
+            {
+                const uint8_t source = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[target] = registers[source];
+            }
+            DISPATCH();
+        }
+    TARGET(MOV_IMMEDIATE1):
+        {
+            {
+                const uint8_t value = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[target] = value;
+            }
+            DISPATCH();
+        }
+    TARGET(MOV_IMMEDIATE2):
+        {
+            {
+                const uint16_t value = *reinterpret_cast<uint16_t*>(base + registers[PC_REGISTER]);
+                registers[PC_REGISTER] += 2;
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[target] = value;
+            }
+            DISPATCH();
+        }
+    TARGET(MOV_IMMEDIATE4):
+        {
+            {
+                const uint32_t value = *reinterpret_cast<uint32_t*>(base + registers[PC_REGISTER]);
+                registers[PC_REGISTER] += 4;
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[target] = value;
+            }
+            DISPATCH();
+        }
+    TARGET(MOV_IMMEDIATE8):
+        {
+            {
+                const uint64_t value = *reinterpret_cast<uint64_t*>(base + registers[PC_REGISTER]);
+                registers[PC_REGISTER] += 8;
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[target] = value;
+            }
+            DISPATCH();
+        }
+    TARGET(JUMP):
+        {
+            {
+                const uint8_t address = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[PC_REGISTER] = registers[address];
+            }
+            DISPATCH();
+        }
+    TARGET(JUMP_IMMEDIATE):
+        {
+            {
+                const uint64_t address = *reinterpret_cast<uint64_t*>(base + registers[PC_REGISTER]);
+                registers[PC_REGISTER] = address;
+            }
+            DISPATCH();
+        }
+    TARGET(JE):
+        {
+            {
+                const uint8_t address = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                if ((registers[FLAGS_REGISTER] & ZERO_MASK) != 0)
+                    registers[PC_REGISTER] = registers[address];
+            }
+            DISPATCH();
+        }
+    TARGET(JNE):
+        {
+            {
+                const uint8_t address = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                if ((registers[FLAGS_REGISTER] & ZERO_MASK) == 0)
+                    registers[PC_REGISTER] = registers[address];
+            }
+            DISPATCH();
+        }
+    TARGET(JL):
+        {
+            {
+                const uint8_t address = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                if (const uint64_t flags = registers[FLAGS_REGISTER]; ((flags & ZERO_MASK) == 0)
+                    && ((flags & CARRY_MASK) != 0))
+                    registers[PC_REGISTER] = registers[address];
+            }
+            DISPATCH();
+        }
+    TARGET(JLE):
+        {
+            {
+                const uint8_t address = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                if (const uint64_t flags = registers[FLAGS_REGISTER]; ((flags & ZERO_MASK) != 0)
+                    || ((flags & CARRY_MASK) != 0))
+                    registers[PC_REGISTER] = registers[address];
+            }
+            DISPATCH();
+        }
+    TARGET(JG):
+        {
+            {
+                const uint8_t address = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                if (const uint64_t flags = registers[FLAGS_REGISTER]; ((flags & ZERO_MASK) == 0)
+                    && ((flags & CARRY_MASK) == 0))
+                    registers[PC_REGISTER] = registers[address];
+            }
+            DISPATCH();
+        }
+    TARGET(JGE):
+        {
+            {
+                const uint8_t address = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                if (const uint64_t flags = registers[FLAGS_REGISTER]; ((flags & ZERO_MASK) != 0)
+                    || ((flags & CARRY_MASK) == 0))
+                    registers[PC_REGISTER] = registers[address];
+            }
+            DISPATCH();
+        }
+    TARGET(JUL):
+        {
+            {
+                const uint8_t address = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                if (const uint64_t flags = registers[FLAGS_REGISTER]; ((flags & ZERO_MASK) == 0)
+                    && ((flags & UNSIGNED_MASK) != 0))
+                    registers[PC_REGISTER] = registers[address];
+            }
+            DISPATCH();
+        }
+    TARGET(JULE):
+        {
+            {
+                const uint8_t address = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                if (const uint64_t flags = registers[FLAGS_REGISTER]; ((flags & ZERO_MASK) != 0)
+                    || ((flags & UNSIGNED_MASK) != 0))
+                    registers[PC_REGISTER] = registers[address];
+            }
+            DISPATCH();
+        }
+    TARGET(JUG):
+        {
+            {
+                const uint8_t address = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                if (const uint64_t flags = registers[FLAGS_REGISTER]; ((flags & ZERO_MASK) == 0)
+                    && ((flags & UNSIGNED_MASK) == 0))
+                    registers[PC_REGISTER] = registers[address];
+            }
+            DISPATCH();
+        }
+    TARGET(JUGE):
+        {
+            {
+                const uint8_t address = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                if (const uint64_t flags = registers[FLAGS_REGISTER]; ((flags & ZERO_MASK) != 0)
+                    || ((flags & UNSIGNED_MASK) == 0))
+                    registers[PC_REGISTER] = registers[address];
+            }
+            DISPATCH();
+        }
+    TARGET(MALLOC):
+        {
+            {
+                const uint8_t size = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[target] = memory->allocateMemory(threadHandle, registers[size]);
+            }
+            DISPATCH();
+        }
+    TARGET(FREE):
+        {
+            {
+                const uint8_t ptr = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                memory->freeMemory(threadHandle, registers[ptr]);
+            }
+            DISPATCH();
+        }
+    TARGET(REALLOC):
+        {
+            {
+                const uint8_t ptr = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t size = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[target] = memory->reallocateMemory(threadHandle, registers[ptr], registers[size]);
+            }
+            DISPATCH();
+        }
+    TARGET(ADD):
+        {
+            {
+                const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[target] = registers[operand1] + registers[operand2];
+            }
+            DISPATCH();
+        }
+    TARGET(SUB):
+        {
+            {
+                const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[target] = registers[operand1] - registers[operand2];
+            }
+            DISPATCH();
+        }
+    TARGET(MUL):
+        {
+            {
+                const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[target] = registers[operand1] * registers[operand2];
+            }
+            DISPATCH();
+        }
+    TARGET(DIV):
+        {
+            {
+                const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[target] = registers[operand1] / registers[operand2];
+            }
+            DISPATCH();
+        }
+    TARGET(MOD):
+        {
+            {
+                const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[target] = registers[operand1] % registers[operand2];
+            }
+            DISPATCH();
+        }
+    TARGET(AND):
+        {
+            {
+                const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[target] = registers[operand1] & registers[operand2];
+            }
+            DISPATCH();
+        }
+    TARGET(OR):
+        {
+            {
+                const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[target] = registers[operand1] | registers[operand2];
+            }
+            DISPATCH();
+        }
+    TARGET(XOR):
+        {
+            {
+                const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[target] = registers[operand1] ^ registers[operand2];
+            }
+            DISPATCH();
+        }
+    TARGET(NOT):
+        {
+            {
+                const uint8_t operand = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[target] = ~registers[operand];
+            }
+            DISPATCH();
+        }
+    TARGET(NEG):
+        {
+            {
+                const uint8_t operand = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[target] = static_cast<uint64_t>(-static_cast<int64_t>(registers[operand]));
+            }
+            DISPATCH();
+        }
+    TARGET(SHL):
+        {
+            {
+                const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[target] = registers[operand1] << registers[operand2];
+            }
+            DISPATCH();
+        }
+    TARGET(SHR):
+        {
+            {
+                const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[target] = static_cast<int64_t>(registers[operand1]) >> registers[operand2];
+            }
+            DISPATCH();
+        }
+    TARGET(USHR):
+        {
+            {
+                const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[target] = registers[operand1] >> registers[operand2];
+            }
+            DISPATCH();
+        }
+    TARGET(INC):
+        {
+            {
+                const uint8_t operand = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                ++registers[operand];
+            }
+            DISPATCH();
+        }
+    TARGET(DEC):
+        {
+            {
+                const uint8_t operand = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                --registers[operand];
+            }
+            DISPATCH();
+        }
+    TARGET(ADD_DOUBLE):
+        {
+            {
+                const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[target] = std::bit_cast<uint64_t>(
+                    std::bit_cast<double>(registers[operand1]) + std::bit_cast<double>(registers[operand2]));
+            }
+            DISPATCH();
+        }
+    TARGET(SUB_DOUBLE):
+        {
+            {
+                const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[target] = std::bit_cast<uint64_t>(
+                    std::bit_cast<double>(registers[operand1]) - std::bit_cast<double>(registers[operand2]));
+            }
+            DISPATCH();
+        }
+    TARGET(MUL_DOUBLE):
+        {
+            {
+                const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[target] = std::bit_cast<uint64_t>(
+                    std::bit_cast<double>(registers[operand1]) * std::bit_cast<double>(registers[operand2]));
+            }
+            DISPATCH();
+        }
+    TARGET(DIV_DOUBLE):
+        {
+            {
+                const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[target] = std::bit_cast<uint64_t>(
+                    std::bit_cast<double>(registers[operand1]) / std::bit_cast<double>(registers[operand2]));
+            }
+            DISPATCH();
+        }
+    TARGET(MOD_DOUBLE):
+        {
+            {
+                const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[target] = std::bit_cast<uint64_t>(std::fmod(
+                    std::bit_cast<double>(registers[operand1]), std::bit_cast<double>(registers[operand2])));
+            }
+            DISPATCH();
+        }
+    TARGET(ADD_FLOAT):
+        {
+            {
+                const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[target] = static_cast<uint64_t>(std::bit_cast<uint32_t>(
+                    std::bit_cast<float>(static_cast<uint32_t>(registers[operand1] & 0xffffffffL)) +
+                    std::bit_cast<float>(static_cast<uint32_t>(registers[operand2] & 0xffffffffL))));
+            }
+            DISPATCH();
+        }
+    TARGET(SUB_FLOAT):
+        {
+            {
+                const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[target] = static_cast<uint64_t>(std::bit_cast<uint32_t>(
+                    std::bit_cast<float>(static_cast<uint32_t>(registers[operand1] & 0xffffffffL)) -
+                    std::bit_cast<float>(static_cast<uint32_t>(registers[operand2] & 0xffffffffL))));
+            }
+            DISPATCH();
+        }
+    TARGET(MUL_FLOAT):
+        {
+            {
+                const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[target] = static_cast<uint64_t>(std::bit_cast<uint32_t>(
+                    std::bit_cast<float>(static_cast<uint32_t>(registers[operand1] & 0xffffffffL)) *
+                    std::bit_cast<float>(static_cast<uint32_t>(registers[operand2] & 0xffffffffL))));
+            }
+            DISPATCH();
+        }
+    TARGET(DIV_FLOAT):
+        {
+            {
+                const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[target] = static_cast<uint64_t>(std::bit_cast<uint32_t>(
+                    std::bit_cast<float>(static_cast<uint32_t>(registers[operand1] & 0xffffffffL)) /
+                    std::bit_cast<float>(static_cast<uint32_t>(registers[operand2] & 0xffffffffL))));
+            }
+            DISPATCH();
+        }
+    TARGET(MOD_FLOAT):
+        {
+            {
+                const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[target] = static_cast<uint64_t>(std::bit_cast<uint32_t>(
+                    std::fmod(std::bit_cast<float>(static_cast<uint32_t>(registers[operand1] & 0xffffffffL)),
+                              std::bit_cast<float>(static_cast<uint32_t>(registers[operand2] & 0xffffffffL)))));
+            }
+            DISPATCH();
+        }
+    TARGET(ATOMIC_ADD):
+        {
+            {
+                memory->lock();
+                const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[target] = registers[operand1] + registers[operand2];
+                memory->unlock();
+            }
+            DISPATCH();
+        }
+    TARGET(ATOMIC_SUB):
+        {
+            {
+                memory->lock();
+                const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[target] = registers[operand1] - registers[operand2];
+                memory->unlock();
+            }
+            DISPATCH();
+        }
+    TARGET(ATOMIC_MUL):
+        {
+            {
+                memory->lock();
+                const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[target] = registers[operand1] * registers[operand2];
+                memory->unlock();
+            }
+            DISPATCH();
+        }
+    TARGET(ATOMIC_DIV):
+        {
+            {
+                memory->lock();
+                const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[target] = registers[operand1] / registers[operand2];
+                memory->unlock();
+            }
+            DISPATCH();
+        }
+    TARGET(ATOMIC_MOD):
+        {
+            {
+                memory->lock();
+                const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[target] = registers[operand1] % registers[operand2];
+                memory->unlock();
+            }
+            DISPATCH();
+        }
+    TARGET(ATOMIC_AND):
+        {
+            {
+                memory->lock();
+                const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[target] = registers[operand1] & registers[operand2];
+                memory->unlock();
+            }
+            DISPATCH();
+        }
+    TARGET(ATOMIC_OR):
+        {
+            {
+                memory->lock();
+                const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[target] = registers[operand1] | registers[operand2];
+                memory->unlock();
+            }
+            DISPATCH();
+        }
+    TARGET(ATOMIC_XOR):
+        {
+            {
+                memory->lock();
+                const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[target] = registers[operand1] ^ registers[operand2];
+                memory->unlock();
+            }
+            DISPATCH();
+        }
+    TARGET(ATOMIC_NOT):
+        {
+            {
+                memory->lock();
+                const uint8_t operand = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[target] = ~registers[operand];
+                memory->unlock();
+            }
+            DISPATCH();
+        }
+    TARGET(ATOMIC_NEG):
+        {
+            {
+                memory->lock();
+                const uint8_t operand = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[target] = static_cast<uint64_t>(-static_cast<int64_t>(registers[operand]));
+                memory->unlock();
+            }
+            DISPATCH();
+        }
+    TARGET(ATOMIC_SHL):
+        {
+            {
+                memory->lock();
+                const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[target] = registers[operand1] << registers[operand2];
+                memory->unlock();
+            }
+            DISPATCH();
+        }
+    TARGET(ATOMIC_SHR):
+        {
+            {
+                memory->lock();
+                const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[target] = static_cast<int64_t>(registers[operand1]) >> registers[operand2];
+                memory->unlock();
+            }
+            DISPATCH();
+        }
+    TARGET(ATOMIC_USHR):
+        {
+            {
+                memory->lock();
+                const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[target] = registers[operand1] >> registers[operand2];
+                memory->unlock();
+            }
+            DISPATCH();
+        }
+    TARGET(ATOMIC_INC):
+        {
+            {
+                memory->lock();
+                const uint8_t operand = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint64_t address = registers[operand];
+                const uint64_t tmp = *reinterpret_cast<uint64_t*>(base + address) + 1;
+                *reinterpret_cast<uint64_t*>(base + address) = tmp;
+                memory->unlock();
+            }
+            DISPATCH();
+        }
+    TARGET(ATOMIC_DEC):
+        {
+            {
+                memory->lock();
+                const uint8_t operand = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint64_t address = registers[operand];
+                const uint64_t tmp = *reinterpret_cast<uint64_t*>(base + address) - 1;
+                *reinterpret_cast<uint64_t*>(base + address) = tmp;
+                memory->unlock();
+            }
+            DISPATCH();
+        }
+    TARGET(ATOMIC_ADD_DOUBLE):
+        {
+            {
+                memory->lock();
+                const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[target] = std::bit_cast<uint64_t>(
+                    std::bit_cast<double>(registers[operand1]) + std::bit_cast<double>(registers[operand2]));
+                memory->unlock();
+            }
+            DISPATCH();
+        }
+    TARGET(ATOMIC_SUB_DOUBLE):
+        {
+            {
+                memory->lock();
+                const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[target] = std::bit_cast<uint64_t>(
+                    std::bit_cast<double>(registers[operand1]) - std::bit_cast<double>(registers[operand2]));
+                memory->unlock();
+            }
+            DISPATCH();
+        }
+    TARGET(ATOMIC_MUL_DOUBLE):
+        {
+            {
+                memory->lock();
+                const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[target] = std::bit_cast<uint64_t>(
+                    std::bit_cast<double>(registers[operand1]) * std::bit_cast<double>(registers[operand2]));
+                memory->unlock();
+            }
+            DISPATCH();
+        }
+    TARGET(ATOMIC_DIV_DOUBLE):
+        {
+            {
+                memory->lock();
+                const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[target] = std::bit_cast<uint64_t>(
+                    std::bit_cast<double>(registers[operand1]) / std::bit_cast<double>(registers[operand2]));
+                memory->unlock();
+            }
+            DISPATCH();
+        }
+    TARGET(ATOMIC_MOD_DOUBLE):
+        {
+            {
+                memory->lock();
+                const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[target] = std::bit_cast<uint64_t>(std::fmod(
+                    std::bit_cast<double>(registers[operand1]), std::bit_cast<double>(registers[operand2])));
+                memory->unlock();
+            }
+            DISPATCH();
+        }
+    TARGET(ATOMIC_ADD_FLOAT):
+        {
+            {
+                memory->lock();
+                const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[target] = static_cast<uint64_t>(std::bit_cast<uint32_t>(
+                    std::bit_cast<float>(static_cast<uint32_t>(registers[operand1] & 0xffffffffL)) +
+                    std::bit_cast<float>(static_cast<uint32_t>(registers[operand2] & 0xffffffffL))));
+                memory->unlock();
+            }
+            DISPATCH();
+        }
+    TARGET(ATOMIC_SUB_FLOAT):
+        {
+            {
+                memory->lock();
+                const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[target] = static_cast<uint64_t>(std::bit_cast<uint32_t>(
+                    std::bit_cast<float>(static_cast<uint32_t>(registers[operand1] & 0xffffffffL)) -
+                    std::bit_cast<float>(static_cast<uint32_t>(registers[operand2] & 0xffffffffL))));
+                memory->unlock();
+            }
+            DISPATCH();
+        }
+    TARGET(ATOMIC_MUL_FLOAT):
+        {
+            {
+                memory->lock();
+                const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[target] = static_cast<uint64_t>(std::bit_cast<uint32_t>(
+                    std::bit_cast<float>(static_cast<uint32_t>(registers[operand1] & 0xffffffffL)) *
+                    std::bit_cast<float>(static_cast<uint32_t>(registers[operand2] & 0xffffffffL))));
+                memory->unlock();
+            }
+            DISPATCH();
+        }
+    TARGET(ATOMIC_DIV_FLOAT):
+        {
+            {
+                memory->lock();
+                const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[target] = static_cast<uint64_t>(std::bit_cast<uint32_t>(
+                    std::bit_cast<float>(static_cast<uint32_t>(registers[operand1] & 0xffffffffL)) /
+                    std::bit_cast<float>(static_cast<uint32_t>(registers[operand2] & 0xffffffffL))));
+                memory->unlock();
+            }
+            DISPATCH();
+        }
+    TARGET(ATOMIC_MOD_FLOAT):
+        {
+            {
+                memory->lock();
+                const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[target] = static_cast<uint64_t>(std::bit_cast<uint32_t>(
+                    std::fmod(std::bit_cast<float>(static_cast<uint32_t>(registers[operand1] & 0xffffffffL)),
+                              std::bit_cast<float>(static_cast<uint32_t>(registers[operand2] & 0xffffffffL)))));
+                memory->unlock();
+            }
+            DISPATCH();
+        }
+    TARGET(CAS):
+        {
+            {
+                const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t operand3 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                uint64_t value1 = registers[operand1];
+                uint64_t value2 = registers[operand2];
+                uint64_t flags = registers[FLAGS_REGISTER];
                 if (value1 == value2)
                 {
-                    flags = (flags & ~ZERO_MASK & ~CARRY_MASK & ~UNSIGNED_MASK) |
-                        1;
+                    flags = (flags & ~ZERO_MASK) | 1;
+                    registers[operand1] = registers[operand3];
                 }
                 else
                 {
@@ -503,914 +1436,214 @@ namespace lvm
                     bool unsignedResult = std::bit_cast<uint64_t>(value1) < std::bit_cast<uint64_t>(value2);
                     flags = (flags & ~ZERO_MASK & ~CARRY_MASK & ~UNSIGNED_MASK) |
                         ((signedResult ? 1 : 0) << 1) | ((unsignedResult ? 1 : 0) << 2);
+                    registers[operand2] = value1;
                 }
+                registers[FLAGS_REGISTER] = flags;
             }
-            registers[FLAGS_REGISTER] = flags;
-            memory->unlock();
-            DISPATCH();
-        }
-    TARGET(MOV_E):
-        {
-            const uint8_t value = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            if ((registers[FLAGS_REGISTER] & ZERO_MASK) != 0)
-                registers[target] = registers[value];
-            DISPATCH();
-        }
-    TARGET(MOV_NE):
-        {
-            const uint8_t value = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            if ((registers[FLAGS_REGISTER] & ZERO_MASK) == 0)
-                registers[target] = registers[value];
-            DISPATCH();
-        }
-    TARGET(MOV_L):
-        {
-            const uint8_t value = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            if (const uint64_t flags = registers[FLAGS_REGISTER]; ((flags & ZERO_MASK) == 0)
-                && ((flags & CARRY_MASK) != 0))
-                registers[target] = registers[value];
-            DISPATCH();
-        }
-    TARGET(MOV_LE):
-        {
-            const uint8_t value = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            if (const uint64_t flags = registers[FLAGS_REGISTER]; ((flags & ZERO_MASK) != 0)
-                || ((flags & CARRY_MASK) != 0))
-                registers[target] = registers[value];
-            DISPATCH();
-        }
-    TARGET(MOV_G):
-        {
-            const uint8_t value = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            if (const uint64_t flags = registers[FLAGS_REGISTER]; ((flags & ZERO_MASK) == 0)
-                && ((flags & CARRY_MASK) == 0))
-                registers[target] = registers[value];
-            DISPATCH();
-        }
-    TARGET(MOV_GE):
-        {
-            const uint8_t value = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            if (const uint64_t flags = registers[FLAGS_REGISTER]; ((flags & ZERO_MASK) != 0)
-                || ((flags & CARRY_MASK) == 0))
-                registers[target] = registers[value];
-            DISPATCH();
-        }
-    TARGET(MOV_UL):
-        {
-            const uint8_t value = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            if (const uint64_t flags = registers[FLAGS_REGISTER]; ((flags & ZERO_MASK) == 0)
-                && ((flags & UNSIGNED_MASK) != 0))
-                registers[target] = registers[value];
-            DISPATCH();
-        }
-    TARGET(MOV_ULE):
-        {
-            const uint8_t value = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            if (const uint64_t flags = registers[FLAGS_REGISTER]; ((flags & ZERO_MASK) != 0)
-                || ((flags & UNSIGNED_MASK) != 0))
-                registers[target] = registers[value];
-            DISPATCH();
-        }
-    TARGET(MOV_UG):
-        {
-            const uint8_t value = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            if (const uint64_t flags = registers[FLAGS_REGISTER]; ((flags & ZERO_MASK) == 0)
-                && ((flags & UNSIGNED_MASK) == 0))
-                registers[target] = registers[value];
-            DISPATCH();
-        }
-    TARGET(MOV_UGE):
-        {
-            const uint8_t value = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            if (const uint64_t flags = registers[FLAGS_REGISTER]; ((flags & ZERO_MASK) != 0)
-                || ((flags & UNSIGNED_MASK) == 0))
-                registers[target] = registers[value];
-            DISPATCH();
-        }
-    TARGET(MOV):
-        {
-            const uint8_t source = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[target] = registers[source];
-            DISPATCH();
-        }
-    TARGET(MOV_IMMEDIATE1):
-        {
-            const uint8_t value = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[target] = value;
-            DISPATCH();
-        }
-    TARGET(MOV_IMMEDIATE2):
-        {
-            const uint16_t value = *reinterpret_cast<uint16_t*>(base + registers[PC_REGISTER]);
-            registers[PC_REGISTER] += 2;
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[target] = value;
-            DISPATCH();
-        }
-    TARGET(MOV_IMMEDIATE4):
-        {
-            const uint32_t value = *reinterpret_cast<uint32_t*>(base + registers[PC_REGISTER]);
-            registers[PC_REGISTER] += 4;
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[target] = value;
-            DISPATCH();
-        }
-    TARGET(MOV_IMMEDIATE8):
-        {
-            const uint64_t value = *reinterpret_cast<uint64_t*>(base + registers[PC_REGISTER]);
-            registers[PC_REGISTER] += 8;
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[target] = value;
-            DISPATCH();
-        }
-    TARGET(JUMP):
-        {
-            const uint8_t address = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[PC_REGISTER] = registers[address];
-            DISPATCH();
-        }
-    TARGET(JUMP_IMMEDIATE):
-        {
-            const uint64_t address = *reinterpret_cast<uint64_t*>(base + registers[PC_REGISTER]);
-            registers[PC_REGISTER] = address;
-            DISPATCH();
-        }
-    TARGET(JE):
-        {
-            const uint8_t address = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            if ((registers[FLAGS_REGISTER] & ZERO_MASK) != 0)
-                registers[PC_REGISTER] = registers[address];
-            DISPATCH();
-        }
-    TARGET(JNE):
-        {
-            const uint8_t address = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            if ((registers[FLAGS_REGISTER] & ZERO_MASK) == 0)
-                registers[PC_REGISTER] = registers[address];
-            DISPATCH();
-        }
-    TARGET(JL):
-        {
-            const uint8_t address = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            if (const uint64_t flags = registers[FLAGS_REGISTER]; ((flags & ZERO_MASK) == 0)
-                && ((flags & CARRY_MASK) != 0))
-                registers[PC_REGISTER] = registers[address];
-            DISPATCH();
-        }
-    TARGET(JLE):
-        {
-            const uint8_t address = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            if (const uint64_t flags = registers[FLAGS_REGISTER]; ((flags & ZERO_MASK) != 0)
-                || ((flags & CARRY_MASK) != 0))
-                registers[PC_REGISTER] = registers[address];
-            DISPATCH();
-        }
-    TARGET(JG):
-        {
-            const uint8_t address = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            if (const uint64_t flags = registers[FLAGS_REGISTER]; ((flags & ZERO_MASK) == 0)
-                && ((flags & CARRY_MASK) == 0))
-                registers[PC_REGISTER] = registers[address];
-            DISPATCH();
-        }
-    TARGET(JGE):
-        {
-            const uint8_t address = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            if (const uint64_t flags = registers[FLAGS_REGISTER]; ((flags & ZERO_MASK) != 0)
-                || ((flags & CARRY_MASK) == 0))
-                registers[PC_REGISTER] = registers[address];
-            DISPATCH();
-        }
-    TARGET(JUL):
-        {
-            const uint8_t address = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            if (const uint64_t flags = registers[FLAGS_REGISTER]; ((flags & ZERO_MASK) == 0)
-                && ((flags & UNSIGNED_MASK) != 0))
-                registers[PC_REGISTER] = registers[address];
-            DISPATCH();
-        }
-    TARGET(JULE):
-        {
-            const uint8_t address = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            if (const uint64_t flags = registers[FLAGS_REGISTER]; ((flags & ZERO_MASK) != 0)
-                || ((flags & UNSIGNED_MASK) != 0))
-                registers[PC_REGISTER] = registers[address];
-            DISPATCH();
-        }
-    TARGET(JUG):
-        {
-            const uint8_t address = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            if (const uint64_t flags = registers[FLAGS_REGISTER]; ((flags & ZERO_MASK) == 0)
-                && ((flags & UNSIGNED_MASK) == 0))
-                registers[PC_REGISTER] = registers[address];
-            DISPATCH();
-        }
-    TARGET(JUGE):
-        {
-            const uint8_t address = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            if (const uint64_t flags = registers[FLAGS_REGISTER]; ((flags & ZERO_MASK) != 0)
-                || ((flags & UNSIGNED_MASK) == 0))
-                registers[PC_REGISTER] = registers[address];
-            DISPATCH();
-        }
-    TARGET(MALLOC):
-        {
-            const uint8_t size = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[target] = memory->allocateMemory(threadHandle, registers[size]);
-            DISPATCH();
-        }
-    TARGET(FREE):
-        {
-            const uint8_t ptr = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            memory->freeMemory(threadHandle, registers[ptr]);
-            DISPATCH();
-        }
-    TARGET(REALLOC):
-        {
-            const uint8_t ptr = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t size = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[target] = memory->reallocateMemory(threadHandle, registers[ptr], registers[size]);
-            DISPATCH();
-        }
-    TARGET(ADD):
-        {
-            const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[target] = registers[operand1] + registers[operand2];
-            DISPATCH();
-        }
-    TARGET(SUB):
-        {
-            const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[target] = registers[operand1] - registers[operand2];
-            DISPATCH();
-        }
-    TARGET(MUL):
-        {
-            const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[target] = registers[operand1] * registers[operand2];
-            DISPATCH();
-        }
-    TARGET(DIV):
-        {
-            const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[target] = registers[operand1] / registers[operand2];
-            DISPATCH();
-        }
-    TARGET(MOD):
-        {
-            const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[target] = registers[operand1] % registers[operand2];
-            DISPATCH();
-        }
-    TARGET(AND):
-        {
-            const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[target] = registers[operand1] & registers[operand2];
-            DISPATCH();
-        }
-    TARGET(OR):
-        {
-            const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[target] = registers[operand1] | registers[operand2];
-            DISPATCH();
-        }
-    TARGET(XOR):
-        {
-            const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[target] = registers[operand1] ^ registers[operand2];
-            DISPATCH();
-        }
-    TARGET(NOT):
-        {
-            const uint8_t operand = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[target] = ~registers[operand];
-            DISPATCH();
-        }
-    TARGET(NEG):
-        {
-            const uint8_t operand = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[target] = static_cast<uint64_t>(-static_cast<int64_t>(registers[operand]));
-            DISPATCH();
-        }
-    TARGET(SHL):
-        {
-            const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[target] = registers[operand1] << registers[operand2];
-            DISPATCH();
-        }
-    TARGET(SHR):
-        {
-            const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[target] = static_cast<int64_t>(registers[operand1]) >> registers[operand2];
-            DISPATCH();
-        }
-    TARGET(USHR):
-        {
-            const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[target] = registers[operand1] >> registers[operand2];
-            DISPATCH();
-        }
-    TARGET(INC):
-        {
-            const uint8_t operand = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            ++registers[operand];
-            DISPATCH();
-        }
-    TARGET(DEC):
-        {
-            const uint8_t operand = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            --registers[operand];
-            DISPATCH();
-        }
-    TARGET(ADD_DOUBLE):
-        {
-            const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[target] = std::bit_cast<uint64_t>(
-                std::bit_cast<double>(registers[operand1]) + std::bit_cast<double>(registers[operand2]));
-            DISPATCH();
-        }
-    TARGET(SUB_DOUBLE):
-        {
-            const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[target] = std::bit_cast<uint64_t>(
-                std::bit_cast<double>(registers[operand1]) - std::bit_cast<double>(registers[operand2]));
-            DISPATCH();
-        }
-    TARGET(MUL_DOUBLE):
-        {
-            const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[target] = std::bit_cast<uint64_t>(
-                std::bit_cast<double>(registers[operand1]) * std::bit_cast<double>(registers[operand2]));
-            DISPATCH();
-        }
-    TARGET(DIV_DOUBLE):
-        {
-            const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[target] = std::bit_cast<uint64_t>(
-                std::bit_cast<double>(registers[operand1]) / std::bit_cast<double>(registers[operand2]));
-            DISPATCH();
-        }
-    TARGET(MOD_DOUBLE):
-        {
-            const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[target] = std::bit_cast<uint64_t>(std::fmod(
-                std::bit_cast<double>(registers[operand1]), std::bit_cast<double>(registers[operand2])));
-            DISPATCH();
-        }
-    TARGET(ADD_FLOAT):
-        {
-            const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[target] = static_cast<uint64_t>(std::bit_cast<uint32_t>(
-                std::bit_cast<float>(static_cast<uint32_t>(registers[operand1] & 0xffffffffL)) +
-                std::bit_cast<float>(static_cast<uint32_t>(registers[operand2] & 0xffffffffL))));
-            DISPATCH();
-        }
-    TARGET(SUB_FLOAT):
-        {
-            const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[target] = static_cast<uint64_t>(std::bit_cast<uint32_t>(
-                std::bit_cast<float>(static_cast<uint32_t>(registers[operand1] & 0xffffffffL)) -
-                std::bit_cast<float>(static_cast<uint32_t>(registers[operand2] & 0xffffffffL))));
-            DISPATCH();
-        }
-    TARGET(MUL_FLOAT):
-        {
-            const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[target] = static_cast<uint64_t>(std::bit_cast<uint32_t>(
-                std::bit_cast<float>(static_cast<uint32_t>(registers[operand1] & 0xffffffffL)) *
-                std::bit_cast<float>(static_cast<uint32_t>(registers[operand2] & 0xffffffffL))));
-            DISPATCH();
-        }
-    TARGET(DIV_FLOAT):
-        {
-            const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[target] = static_cast<uint64_t>(std::bit_cast<uint32_t>(
-                std::bit_cast<float>(static_cast<uint32_t>(registers[operand1] & 0xffffffffL)) /
-                std::bit_cast<float>(static_cast<uint32_t>(registers[operand2] & 0xffffffffL))));
-            DISPATCH();
-        }
-    TARGET(MOD_FLOAT):
-        {
-            const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[target] = static_cast<uint64_t>(std::bit_cast<uint32_t>(
-                std::fmod(std::bit_cast<float>(static_cast<uint32_t>(registers[operand1] & 0xffffffffL)),
-                          std::bit_cast<float>(static_cast<uint32_t>(registers[operand2] & 0xffffffffL)))));
-            DISPATCH();
-        }
-    TARGET(ATOMIC_ADD):
-        {
-            memory->lock();
-            const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[target] = registers[operand1] + registers[operand2];
-            memory->unlock();
-            DISPATCH();
-        }
-    TARGET(ATOMIC_SUB):
-        {
-            memory->lock();
-            const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[target] = registers[operand1] - registers[operand2];
-            memory->unlock();
-            DISPATCH();
-        }
-    TARGET(ATOMIC_MUL):
-        {
-            memory->lock();
-            const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[target] = registers[operand1] * registers[operand2];
-            memory->unlock();
-            DISPATCH();
-        }
-    TARGET(ATOMIC_DIV):
-        {
-            memory->lock();
-            const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[target] = registers[operand1] / registers[operand2];
-            memory->unlock();
-            DISPATCH();
-        }
-    TARGET(ATOMIC_MOD):
-        {
-            memory->lock();
-            const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[target] = registers[operand1] % registers[operand2];
-            memory->unlock();
-            DISPATCH();
-        }
-    TARGET(ATOMIC_AND):
-        {
-            memory->lock();
-            const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[target] = registers[operand1] & registers[operand2];
-            memory->unlock();
-            DISPATCH();
-        }
-    TARGET(ATOMIC_OR):
-        {
-            memory->lock();
-            const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[target] = registers[operand1] | registers[operand2];
-            memory->unlock();
-            DISPATCH();
-        }
-    TARGET(ATOMIC_XOR):
-        {
-            memory->lock();
-            const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[target] = registers[operand1] ^ registers[operand2];
-            memory->unlock();
-            DISPATCH();
-        }
-    TARGET(ATOMIC_NOT):
-        {
-            memory->lock();
-            const uint8_t operand = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[target] = ~registers[operand];
-            memory->unlock();
-            DISPATCH();
-        }
-    TARGET(ATOMIC_NEG):
-        {
-            memory->lock();
-            const uint8_t operand = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[target] = static_cast<uint64_t>(-static_cast<int64_t>(registers[operand]));
-            memory->unlock();
-            DISPATCH();
-        }
-    TARGET(ATOMIC_SHL):
-        {
-            memory->lock();
-            const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[target] = registers[operand1] << registers[operand2];
-            memory->unlock();
-            DISPATCH();
-        }
-    TARGET(ATOMIC_SHR):
-        {
-            memory->lock();
-            const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[target] = static_cast<int64_t>(registers[operand1]) >> registers[operand2];
-            memory->unlock();
-            DISPATCH();
-        }
-    TARGET(ATOMIC_USHR):
-        {
-            memory->lock();
-            const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[target] = registers[operand1] >> registers[operand2];
-            memory->unlock();
-            DISPATCH();
-        }
-    TARGET(ATOMIC_INC):
-        {
-            memory->lock();
-            const uint8_t operand = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint64_t address = registers[operand];
-            const uint64_t tmp = *reinterpret_cast<uint64_t*>(base + address) + 1;
-            *reinterpret_cast<uint64_t*>(base + address) = tmp;
-            memory->unlock();
-            DISPATCH();
-        }
-    TARGET(ATOMIC_DEC):
-        {
-            memory->lock();
-            const uint8_t operand = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint64_t address = registers[operand];
-            const uint64_t tmp = *reinterpret_cast<uint64_t*>(base + address) - 1;
-            *reinterpret_cast<uint64_t*>(base + address) = tmp;
-            memory->unlock();
-            DISPATCH();
-        }
-    TARGET(ATOMIC_ADD_DOUBLE):
-        {
-            memory->lock();
-            const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[target] = std::bit_cast<uint64_t>(
-                std::bit_cast<double>(registers[operand1]) + std::bit_cast<double>(registers[operand2]));
-            memory->unlock();
-            DISPATCH();
-        }
-    TARGET(ATOMIC_SUB_DOUBLE):
-        {
-            memory->lock();
-            const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[target] = std::bit_cast<uint64_t>(
-                std::bit_cast<double>(registers[operand1]) - std::bit_cast<double>(registers[operand2]));
-            memory->unlock();
-            DISPATCH();
-        }
-    TARGET(ATOMIC_MUL_DOUBLE):
-        {
-            memory->lock();
-            const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[target] = std::bit_cast<uint64_t>(
-                std::bit_cast<double>(registers[operand1]) * std::bit_cast<double>(registers[operand2]));
-            memory->unlock();
-            DISPATCH();
-        }
-    TARGET(ATOMIC_DIV_DOUBLE):
-        {
-            memory->lock();
-            const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[target] = std::bit_cast<uint64_t>(
-                std::bit_cast<double>(registers[operand1]) / std::bit_cast<double>(registers[operand2]));
-            memory->unlock();
-            DISPATCH();
-        }
-    TARGET(ATOMIC_MOD_DOUBLE):
-        {
-            memory->lock();
-            const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[target] = std::bit_cast<uint64_t>(std::fmod(
-                std::bit_cast<double>(registers[operand1]), std::bit_cast<double>(registers[operand2])));
-            memory->unlock();
-            DISPATCH();
-        }
-    TARGET(ATOMIC_ADD_FLOAT):
-        {
-            memory->lock();
-            const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[target] = static_cast<uint64_t>(std::bit_cast<uint32_t>(
-                std::bit_cast<float>(static_cast<uint32_t>(registers[operand1] & 0xffffffffL)) +
-                std::bit_cast<float>(static_cast<uint32_t>(registers[operand2] & 0xffffffffL))));
-            memory->unlock();
-            DISPATCH();
-        }
-    TARGET(ATOMIC_SUB_FLOAT):
-        {
-            memory->lock();
-            const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[target] = static_cast<uint64_t>(std::bit_cast<uint32_t>(
-                std::bit_cast<float>(static_cast<uint32_t>(registers[operand1] & 0xffffffffL)) -
-                std::bit_cast<float>(static_cast<uint32_t>(registers[operand2] & 0xffffffffL))));
-            memory->unlock();
-            DISPATCH();
-        }
-    TARGET(ATOMIC_MUL_FLOAT):
-        {
-            memory->lock();
-            const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[target] = static_cast<uint64_t>(std::bit_cast<uint32_t>(
-                std::bit_cast<float>(static_cast<uint32_t>(registers[operand1] & 0xffffffffL)) *
-                std::bit_cast<float>(static_cast<uint32_t>(registers[operand2] & 0xffffffffL))));
-            memory->unlock();
-            DISPATCH();
-        }
-    TARGET(ATOMIC_DIV_FLOAT):
-        {
-            memory->lock();
-            const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[target] = static_cast<uint64_t>(std::bit_cast<uint32_t>(
-                std::bit_cast<float>(static_cast<uint32_t>(registers[operand1] & 0xffffffffL)) /
-                std::bit_cast<float>(static_cast<uint32_t>(registers[operand2] & 0xffffffffL))));
-            memory->unlock();
-            DISPATCH();
-        }
-    TARGET(ATOMIC_MOD_FLOAT):
-        {
-            memory->lock();
-            const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[target] = static_cast<uint64_t>(std::bit_cast<uint32_t>(
-                std::fmod(std::bit_cast<float>(static_cast<uint32_t>(registers[operand1] & 0xffffffffL)),
-                          std::bit_cast<float>(static_cast<uint32_t>(registers[operand2] & 0xffffffffL)))));
-            memory->unlock();
-            DISPATCH();
-        }
-    TARGET(CAS):
-        {
-            const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t operand3 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            uint64_t value1 = registers[operand1];
-            uint64_t value2 = registers[operand2];
-            uint64_t flags = registers[FLAGS_REGISTER];
-            if (value1 == value2)
-            {
-                flags = (flags & ~ZERO_MASK) | 1;
-                registers[operand1] = registers[operand3];
-            }
-            else
-            {
-                bool signedResult = value1 < value2;
-                bool unsignedResult = std::bit_cast<uint64_t>(value1) < std::bit_cast<uint64_t>(value2);
-                flags = (flags & ~ZERO_MASK & ~CARRY_MASK & ~UNSIGNED_MASK) |
-                    ((signedResult ? 1 : 0) << 1) | ((unsignedResult ? 1 : 0) << 2);
-                registers[operand2] = value1;
-            }
-            registers[FLAGS_REGISTER] = flags;
             DISPATCH();
         }
     TARGET(INVOKE):
         {
-            const uint8_t address = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[SP_REGISTER] -= 8;
-            *reinterpret_cast<uint64_t*>(base + registers[SP_REGISTER]) = registers[
-                PC_REGISTER];
-            registers[PC_REGISTER] = registers[address];
+            {
+                const uint8_t address = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[SP_REGISTER] -= 8;
+                *reinterpret_cast<uint64_t*>(base + registers[SP_REGISTER]) = registers[
+                    PC_REGISTER];
+                registers[PC_REGISTER] = registers[address];
+            }
             DISPATCH();
         }
     TARGET(INVOKE_IMMEDIATE):
         {
-            const uint64_t address = *reinterpret_cast<uint64_t*>(base + registers[PC_REGISTER]);
-            registers[SP_REGISTER] -= 8;
-            *reinterpret_cast<uint64_t*>(base + registers[SP_REGISTER]) = (registers[
-                    PC_REGISTER] +
-                8);
-            registers[PC_REGISTER] = address;
+            {
+                const uint64_t address = *reinterpret_cast<uint64_t*>(base + registers[PC_REGISTER]);
+                registers[SP_REGISTER] -= 8;
+                *reinterpret_cast<uint64_t*>(base + registers[SP_REGISTER]) = (registers[
+                        PC_REGISTER] +
+                    8);
+                registers[PC_REGISTER] = address;
+            }
             DISPATCH();
         }
     TARGET(RETURN):
         {
-            registers[PC_REGISTER] = *reinterpret_cast<uint64_t*>(base + registers[
-                SP_REGISTER]);
-            registers[SP_REGISTER] += 8;
+            {
+                registers[PC_REGISTER] = *reinterpret_cast<uint64_t*>(base + registers[
+                    SP_REGISTER]);
+                registers[SP_REGISTER] += 8;
+            }
             DISPATCH();
         }
     TARGET(INTERRUPT):
         {
-            const uint8_t interruptNumber = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]
-                ++);
-            this->interrupt(interruptNumber);
+            {
+                const uint8_t interruptNumber = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]
+                    ++);
+                this->interrupt(interruptNumber);
+            }
             DISPATCH();
         }
     TARGET(INTERRUPT_RETURN):
         {
-            registers[PC_REGISTER] = *reinterpret_cast<uint64_t*>(base + registers[
-                SP_REGISTER]);
-            registers[SP_REGISTER] += 8;
-            registers[FLAGS_REGISTER] = *reinterpret_cast<uint64_t*>(base + registers[
-                SP_REGISTER]);
-            registers[SP_REGISTER] += 8;
+            {
+                registers[PC_REGISTER] = *reinterpret_cast<uint64_t*>(base + registers[
+                    SP_REGISTER]);
+                registers[SP_REGISTER] += 8;
+                registers[FLAGS_REGISTER] = *reinterpret_cast<uint64_t*>(base + registers[
+                    SP_REGISTER]);
+                registers[SP_REGISTER] += 8;
+            }
             DISPATCH();
         }
     TARGET(INT_TYPE_CAST):
         {
-            const uint8_t types = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t source = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t type1 = types >> 4;
-            const uint8_t type2 = types & 0x0f;
-            const uint64_t src = registers[source];
-            if (type1 == type2)
             {
-                registers[target] = src;
-            }
-            else
-            {
-                const uint64_t srcBits = (8L < type1) - 1;
-                const uint64_t sign = (src & (1L << srcBits)) >> srcBits;
-                const uint64_t targetBits = (8L < type2) - 1;
-                registers[target] = (sign << targetBits) | (src & ((1L << targetBits) - 1));
+                const uint8_t types = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t source = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t type1 = types >> 4;
+                const uint8_t type2 = types & 0x0f;
+                const uint64_t src = registers[source];
+                if (type1 == type2)
+                {
+                    registers[target] = src;
+                }
+                else
+                {
+                    const uint64_t srcBits = (8L < type1) - 1;
+                    const uint64_t sign = (src & (1L << srcBits)) >> srcBits;
+                    const uint64_t targetBits = (8L < type2) - 1;
+                    registers[target] = (sign << targetBits) | (src & ((1L << targetBits) - 1));
+                }
             }
             DISPATCH();
         }
     TARGET(LONG_TO_DOUBLE):
         {
-            const uint8_t source = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[target] = std::bit_cast<uint64_t>(
-                static_cast<double>(static_cast<int64_t>(registers[source])));
+            {
+                const uint8_t source = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[target] = std::bit_cast<uint64_t>(
+                    static_cast<double>(static_cast<int64_t>(registers[source])));
+            }
             DISPATCH();
         }
     TARGET(DOUBLE_TO_LONG):
         {
-            const uint8_t source = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[target] = std::bit_cast<uint64_t>(
-                static_cast<int64_t>(std::bit_cast<double>(registers[source])));
+            {
+                const uint8_t source = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[target] = std::bit_cast<uint64_t>(
+                    static_cast<int64_t>(std::bit_cast<double>(registers[source])));
+            }
             DISPATCH();
         }
     TARGET(DOUBLE_TO_FLOAT):
         {
-            const uint8_t source = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[target] = std::bit_cast<uint32_t>(
-                static_cast<float>(std::bit_cast<double>(registers[source])));
+            {
+                const uint8_t source = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[target] = std::bit_cast<uint32_t>(
+                    static_cast<float>(std::bit_cast<double>(registers[source])));
+            }
             DISPATCH();
         }
     TARGET(FLOAT_TO_DOUBLE):
         {
-            const uint8_t source = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[target] = std::bit_cast<uint64_t>(
-                static_cast<double>(std::bit_cast<float>(static_cast<uint32_t>(registers[source]))));
+            {
+                const uint8_t source = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[target] = std::bit_cast<uint64_t>(
+                    static_cast<double>(std::bit_cast<float>(static_cast<uint32_t>(registers[source]))));
+            }
             DISPATCH();
         }
     TARGET(OPEN):
         {
-            const uint8_t pathRegister = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t flagsRegister = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]
-                ++);
-            const uint8_t modeRegister = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t resultRegister = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]
-                ++);
-            uint64_t address = registers[pathRegister];
-            std::string path;
-            char c;
-            while ((c = static_cast<char>(*reinterpret_cast<uint8_t*>(base + address++))) != '\0') path += c;
-            registers[resultRegister] = virtualMachine->open(path.c_str(), flagsRegister, modeRegister);
+            {
+                const uint8_t pathRegister = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t flagsRegister = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]
+                    ++);
+                const uint8_t modeRegister = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t resultRegister = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]
+                    ++);
+                uint64_t address = registers[pathRegister];
+                std::string path;
+                char c;
+                while ((c = static_cast<char>(*reinterpret_cast<uint8_t*>(base + address++))) != '\0') path += c;
+                registers[resultRegister] = virtualMachine->open(path.c_str(), flagsRegister, modeRegister);
+            }
             DISPATCH();
         }
     TARGET(CLOSE):
         {
-            const uint8_t fdRegister = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t resultRegister = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]
-                ++);
-            registers[resultRegister] = virtualMachine->close(registers[fdRegister]);
+            {
+                const uint8_t fdRegister = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t resultRegister = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]
+                    ++);
+                registers[resultRegister] = virtualMachine->close(registers[fdRegister]);
+            }
+            DISPATCH();
         }
     TARGET(READ):
         {
-            const uint8_t fdRegister = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t bufferRegister = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]
-                ++);
-            const uint8_t countRegister = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]
-                ++);
-            const uint8_t resultRegister = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]
-                ++);
-            uint64_t bufferAddress = registers[bufferRegister];
-            uint64_t count = registers[countRegister];
-            uint32_t readCount = virtualMachine->read(registers[fdRegister],
-                                                      reinterpret_cast<uint8_t*>(base + bufferAddress), count);
-            registers[resultRegister] = readCount;
+            {
+                const uint8_t fdRegister = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t bufferRegister = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]
+                    ++);
+                const uint8_t countRegister = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]
+                    ++);
+                const uint8_t resultRegister = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]
+                    ++);
+                uint64_t bufferAddress = registers[bufferRegister];
+                uint64_t count = registers[countRegister];
+                uint32_t readCount = virtualMachine->read(registers[fdRegister],
+                                                          reinterpret_cast<uint8_t*>(base + bufferAddress), count);
+                registers[resultRegister] = readCount;
+            }
             DISPATCH();
         }
     TARGET(WRITE):
         {
-            const uint8_t fdRegister = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t bufferRegister = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]
-                ++);
-            const uint8_t countRegister = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]
-                ++);
-            const uint8_t resultRegister = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]
-                ++);
-            uint64_t address = registers[bufferRegister];
-            uint64_t count = registers[countRegister];
-            registers[resultRegister] = virtualMachine->write(registers[fdRegister],
-                                                              reinterpret_cast<uint8_t*>(base + address),
-                                                              count);
+            {
+                const uint8_t fdRegister = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t bufferRegister = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]
+                    ++);
+                const uint8_t countRegister = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]
+                    ++);
+                const uint8_t resultRegister = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]
+                    ++);
+                uint64_t address = registers[bufferRegister];
+                uint64_t count = registers[countRegister];
+                registers[resultRegister] = virtualMachine->write(registers[fdRegister],
+                                                                  reinterpret_cast<uint8_t*>(base + address),
+                                                                  count);
+            }
             DISPATCH();
         }
     TARGET(CREATE_FRAME):
         {
-            const uint64_t size = *reinterpret_cast<uint64_t*>(base + registers[PC_REGISTER]);
-            registers[PC_REGISTER] += 8;
-            registers[SP_REGISTER] -= 8;
-            *reinterpret_cast<uint64_t*>(base + registers[SP_REGISTER]) = registers[
-                BP_REGISTER];
-            registers[BP_REGISTER] = registers[SP_REGISTER];
-            registers[SP_REGISTER] -= size;
+            {
+                const uint64_t size = *reinterpret_cast<uint64_t*>(base + registers[PC_REGISTER]);
+                registers[PC_REGISTER] += 8;
+                registers[SP_REGISTER] -= 8;
+                *reinterpret_cast<uint64_t*>(base + registers[SP_REGISTER]) = registers[
+                    BP_REGISTER];
+                registers[BP_REGISTER] = registers[SP_REGISTER];
+                registers[SP_REGISTER] -= size;
+            }
             DISPATCH();
         }
     TARGET(DESTROY_FRAME):
         {
-            const uint64_t size = *reinterpret_cast<uint64_t*>(base + registers[PC_REGISTER]);
-            registers[PC_REGISTER] += 8;
-            registers[SP_REGISTER] += size;
-            registers[BP_REGISTER] = *reinterpret_cast<uint64_t*>(base + registers[
-                SP_REGISTER]);
-            registers[SP_REGISTER] += 8;
+            {
+                const uint64_t size = *reinterpret_cast<uint64_t*>(base + registers[PC_REGISTER]);
+                registers[PC_REGISTER] += 8;
+                registers[SP_REGISTER] += size;
+                registers[BP_REGISTER] = *reinterpret_cast<uint64_t*>(base + registers[
+                    SP_REGISTER]);
+                registers[SP_REGISTER] += 8;
+            }
             DISPATCH();
         }
     TARGET(EXIT):
@@ -1427,291 +1660,319 @@ namespace lvm
         }
     TARGET(GET_FIELD_ADDRESS):
         {
-            const uint8_t objectRegister = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]
-                ++);
-            const uint64_t offset = *reinterpret_cast<uint64_t*>(base + registers[PC_REGISTER]);
-            registers[PC_REGISTER] += 8;
-            const uint8_t targetRegister = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]
-                ++);
-            registers[targetRegister] = registers[objectRegister] + offset;
+            {
+                const uint8_t objectRegister = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]
+                    ++);
+                const uint64_t offset = *reinterpret_cast<uint64_t*>(base + registers[PC_REGISTER]);
+                registers[PC_REGISTER] += 8;
+                const uint8_t targetRegister = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]
+                    ++);
+                registers[targetRegister] = registers[objectRegister] + offset;
+            }
             DISPATCH();
         }
     TARGET(GET_LOCAL_ADDRESS):
         {
-            const uint64_t offset = *reinterpret_cast<uint64_t*>(base + registers[PC_REGISTER]);
-            registers[PC_REGISTER] += 8;
-            const uint8_t targetRegister = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]
-                ++);
-            registers[targetRegister] = registers[BP_REGISTER] - offset;
+            {
+                const uint64_t offset = *reinterpret_cast<uint64_t*>(base + registers[PC_REGISTER]);
+                registers[PC_REGISTER] += 8;
+                const uint8_t targetRegister = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]
+                    ++);
+                registers[targetRegister] = registers[BP_REGISTER] - offset;
+            }
             DISPATCH();
         }
     TARGET(GET_PARAMETER_ADDRESS):
         {
-            const uint64_t offset = *reinterpret_cast<uint64_t*>(base + registers[PC_REGISTER]);
-            registers[PC_REGISTER] += 8;
-            const uint8_t targetRegister = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]
-                ++);
-            registers[targetRegister] = registers[BP_REGISTER] + offset;
+            {
+                const uint64_t offset = *reinterpret_cast<uint64_t*>(base + registers[PC_REGISTER]);
+                registers[PC_REGISTER] += 8;
+                const uint8_t targetRegister = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]
+                    ++);
+                registers[targetRegister] = registers[BP_REGISTER] + offset;
+            }
             DISPATCH();
         }
     TARGET(CREATE_THREAD):
         {
-            const uint8_t entryPointRegister = *reinterpret_cast<uint8_t*>(base + registers[
-                PC_REGISTER]++);
-            const uint8_t resultRegister = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]
-                ++);
-            registers[resultRegister] = virtualMachine->createThread(
-                threadHandle, registers[entryPointRegister]);
+            {
+                const uint8_t entryPointRegister = *reinterpret_cast<uint8_t*>(base + registers[
+                    PC_REGISTER]++);
+                const uint8_t resultRegister = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]
+                    ++);
+                registers[resultRegister] = virtualMachine->createThread(
+                    threadHandle, registers[entryPointRegister]);
+            }
             DISPATCH();
         }
     TARGET(THREAD_CONTROL):
         {
-            const uint8_t threadIDRegister = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]
-                ++);
-            const uint8_t command = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            ThreadHandle* handle = virtualMachine->threadID2Handle[registers[threadIDRegister]];
-            switch (command)
             {
-            case TC_STOP:
+                const uint8_t threadIDRegister = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]
+                    ++);
+                const uint8_t command = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                ThreadHandle* handle = virtualMachine->threadID2Handle[registers[threadIDRegister]];
+                switch (command)
                 {
-                    break;
-                }
-            case TC_WAIT:
-                {
-                    break;
-                }
-            case TC_GET_REGISTER:
-                {
-                    const uint8_t reg = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-                    const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]
-                        ++);
-                    registers[target] = handle->executionUnit->registers[reg];
-                    break;
-                }
-            case TC_SET_REGISTER:
-                {
-                    const uint8_t reg = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-                    const uint8_t value = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]
-                        ++);
-                    handle->executionUnit->registers[reg] = registers[value];
-                    break;
-                }
-            default:
-                {
+                case TC_STOP:
+                    {
+                        break;
+                    }
+                case TC_WAIT:
+                    {
+                        break;
+                    }
+                case TC_GET_REGISTER:
+                    {
+                        const uint8_t reg = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                        const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]
+                            ++);
+                        registers[target] = handle->executionUnit->registers[reg];
+                        break;
+                    }
+                case TC_SET_REGISTER:
+                    {
+                        const uint8_t reg = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                        const uint8_t value = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]
+                            ++);
+                        handle->executionUnit->registers[reg] = registers[value];
+                        break;
+                    }
+                default:
+                    {
+                    }
                 }
             }
             DISPATCH();
         }
     TARGET(LOAD_FIELD):
         {
-            const uint8_t size = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t objectRegister = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]
-                ++);
-            const uint64_t offset = *reinterpret_cast<uint64_t*>(base + registers[PC_REGISTER]);
-            registers[PC_REGISTER] += 8;
-            const uint8_t targetRegister = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]
-                ++);
-            const uint64_t address = registers[objectRegister] + offset;
-            if (size == 1)
             {
-                registers[targetRegister] = *reinterpret_cast<uint8_t*>(base + address) & 0xFF;
-            }
-            else if (size == 2)
-            {
-                registers[targetRegister] = *reinterpret_cast<uint16_t*>(base + address) & 0xFFFF;
-            }
-            else if (size == 4)
-            {
-                registers[targetRegister] = *reinterpret_cast<uint32_t*>(base + address) & 0xFFFFFFFFL;
-            }
-            else if (size == 8)
-            {
-                registers[targetRegister] = *reinterpret_cast<uint64_t*>(base + address);
-            }
-            else
-            {
-                throw VMException("Unsupported size: " + size);
+                const uint8_t size = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t objectRegister = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]
+                    ++);
+                const uint64_t offset = *reinterpret_cast<uint64_t*>(base + registers[PC_REGISTER]);
+                registers[PC_REGISTER] += 8;
+                const uint8_t targetRegister = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]
+                    ++);
+                const uint64_t address = registers[objectRegister] + offset;
+                if (size == 1)
+                {
+                    registers[targetRegister] = *reinterpret_cast<uint8_t*>(base + address) & 0xFF;
+                }
+                else if (size == 2)
+                {
+                    registers[targetRegister] = *reinterpret_cast<uint16_t*>(base + address) & 0xFFFF;
+                }
+                else if (size == 4)
+                {
+                    registers[targetRegister] = *reinterpret_cast<uint32_t*>(base + address) & 0xFFFFFFFFL;
+                }
+                else if (size == 8)
+                {
+                    registers[targetRegister] = *reinterpret_cast<uint64_t*>(base + address);
+                }
+                else
+                {
+                    throw VMException("Unsupported size: " + size);
+                }
             }
             DISPATCH();
         }
     TARGET(STORE_FIELD):
         {
-            const uint8_t size = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t objectRegister = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]
-                ++);
-            const uint64_t offset = *reinterpret_cast<uint64_t*>(base + registers[PC_REGISTER]);
-            registers[PC_REGISTER] += 8;
-            const uint8_t valueRegister = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]
-                ++);
+            {
+                const uint8_t size = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t objectRegister = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]
+                    ++);
+                const uint64_t offset = *reinterpret_cast<uint64_t*>(base + registers[PC_REGISTER]);
+                registers[PC_REGISTER] += 8;
+                const uint8_t valueRegister = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]
+                    ++);
 
-            const uint64_t address = registers[objectRegister] + offset;
-            if (size == 1)
-            {
-                *reinterpret_cast<uint8_t*>(base + address) = (registers[valueRegister] & 0xFF);
-            }
-            else if (size == 2)
-            {
-                *reinterpret_cast<uint16_t*>(base + address) = (registers[valueRegister] & 0xFFFF);
-            }
-            else if (size == 4)
-            {
-                *reinterpret_cast<uint32_t*>(base + address) = (registers[valueRegister] & 0xFFFFFFFFL);
-            }
-            else if (size == 8)
-            {
-                *reinterpret_cast<uint64_t*>(base + address) = registers[valueRegister];
-            }
-            else
-            {
-                throw VMException("Unsupported size: " + size);
+                const uint64_t address = registers[objectRegister] + offset;
+                if (size == 1)
+                {
+                    *reinterpret_cast<uint8_t*>(base + address) = (registers[valueRegister] & 0xFF);
+                }
+                else if (size == 2)
+                {
+                    *reinterpret_cast<uint16_t*>(base + address) = (registers[valueRegister] & 0xFFFF);
+                }
+                else if (size == 4)
+                {
+                    *reinterpret_cast<uint32_t*>(base + address) = (registers[valueRegister] & 0xFFFFFFFFL);
+                }
+                else if (size == 8)
+                {
+                    *reinterpret_cast<uint64_t*>(base + address) = registers[valueRegister];
+                }
+                else
+                {
+                    throw VMException("Unsupported size: " + size);
+                }
             }
             DISPATCH();
         }
     TARGET(LOAD_LOCAL):
         {
-            const uint8_t size = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint64_t offset = *reinterpret_cast<uint64_t*>(base + registers[PC_REGISTER]);
-            registers[PC_REGISTER] += 8;
-            const uint8_t targetRegister = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]
-                ++);
-            const uint64_t address = registers[BP_REGISTER] - offset;
-            if (size == 1)
             {
-                registers[targetRegister] = *reinterpret_cast<uint8_t*>(base + address) & 0xFF;
-            }
-            else if (size == 2)
-            {
-                registers[targetRegister] = *reinterpret_cast<uint16_t*>(base + address) & 0xFFFF;
-            }
-            else if (size == 4)
-            {
-                registers[targetRegister] = *reinterpret_cast<uint32_t*>(base + address) & 0xFFFFFFFFL;
-            }
-            else if (size == 8)
-            {
-                registers[targetRegister] = *reinterpret_cast<uint64_t*>(base + address);
-            }
-            else
-            {
-                throw VMException("Unsupported size: " + size);
+                const uint8_t size = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint64_t offset = *reinterpret_cast<uint64_t*>(base + registers[PC_REGISTER]);
+                registers[PC_REGISTER] += 8;
+                const uint8_t targetRegister = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]
+                    ++);
+                const uint64_t address = registers[BP_REGISTER] - offset;
+                if (size == 1)
+                {
+                    registers[targetRegister] = *reinterpret_cast<uint8_t*>(base + address) & 0xFF;
+                }
+                else if (size == 2)
+                {
+                    registers[targetRegister] = *reinterpret_cast<uint16_t*>(base + address) & 0xFFFF;
+                }
+                else if (size == 4)
+                {
+                    registers[targetRegister] = *reinterpret_cast<uint32_t*>(base + address) & 0xFFFFFFFFL;
+                }
+                else if (size == 8)
+                {
+                    registers[targetRegister] = *reinterpret_cast<uint64_t*>(base + address);
+                }
+                else
+                {
+                    throw VMException("Unsupported size: " + size);
+                }
             }
             DISPATCH();
         }
     TARGET(STORE_LOCAL):
         {
-            const uint8_t size = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint64_t offset = *reinterpret_cast<uint64_t*>(base + registers[PC_REGISTER]);
-            registers[PC_REGISTER] += 8;
-            const uint8_t valueRegister = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]
-                ++);
-            const uint64_t address = registers[BP_REGISTER] - offset;
-            if (size == 1)
             {
-                *reinterpret_cast<uint8_t*>(base + address) = (registers[valueRegister] & 0xFF);
-            }
-            else if (size == 2)
-            {
-                *reinterpret_cast<uint16_t*>(base + address) = (registers[valueRegister] & 0xFFFF);
-            }
-            else if (size == 4)
-            {
-                *reinterpret_cast<uint32_t*>(base + address) = (registers[valueRegister] & 0xFFFFFFFFL);
-            }
-            else if (size == 8)
-            {
-                *reinterpret_cast<uint64_t*>(base + address) = registers[valueRegister];
-            }
-            else
-            {
-                throw VMException("Unsupported size: " + size);
+                const uint8_t size = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint64_t offset = *reinterpret_cast<uint64_t*>(base + registers[PC_REGISTER]);
+                registers[PC_REGISTER] += 8;
+                const uint8_t valueRegister = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]
+                    ++);
+                const uint64_t address = registers[BP_REGISTER] - offset;
+                if (size == 1)
+                {
+                    *reinterpret_cast<uint8_t*>(base + address) = (registers[valueRegister] & 0xFF);
+                }
+                else if (size == 2)
+                {
+                    *reinterpret_cast<uint16_t*>(base + address) = (registers[valueRegister] & 0xFFFF);
+                }
+                else if (size == 4)
+                {
+                    *reinterpret_cast<uint32_t*>(base + address) = (registers[valueRegister] & 0xFFFFFFFFL);
+                }
+                else if (size == 8)
+                {
+                    *reinterpret_cast<uint64_t*>(base + address) = registers[valueRegister];
+                }
+                else
+                {
+                    throw VMException("Unsupported size: " + size);
+                }
             }
             DISPATCH();
         }
     TARGET(LOAD_PARAMETER):
         {
-            const uint8_t size = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint64_t offset = *reinterpret_cast<uint64_t*>(base + registers[PC_REGISTER]);
-            registers[PC_REGISTER] += 8;
-            const uint8_t targetRegister = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]
-                ++);
-            const uint64_t address = registers[BP_REGISTER] + offset;
-            if (size == 1)
             {
-                registers[targetRegister] = *reinterpret_cast<uint8_t*>(base + address) & 0xFF;
-            }
-            else if (size == 2)
-            {
-                registers[targetRegister] = *reinterpret_cast<uint16_t*>(base + address) & 0xFFFF;
-            }
-            else if (size == 4)
-            {
-                registers[targetRegister] = *reinterpret_cast<uint32_t*>(base + address) & 0xFFFFFFFFL;
-            }
-            else if (size == 8)
-            {
-                registers[targetRegister] = *reinterpret_cast<uint64_t*>(base + address);
-            }
-            else
-            {
-                throw VMException("Unsupported size: " + size);
+                const uint8_t size = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint64_t offset = *reinterpret_cast<uint64_t*>(base + registers[PC_REGISTER]);
+                registers[PC_REGISTER] += 8;
+                const uint8_t targetRegister = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]
+                    ++);
+                const uint64_t address = registers[BP_REGISTER] + offset;
+                if (size == 1)
+                {
+                    registers[targetRegister] = *reinterpret_cast<uint8_t*>(base + address) & 0xFF;
+                }
+                else if (size == 2)
+                {
+                    registers[targetRegister] = *reinterpret_cast<uint16_t*>(base + address) & 0xFFFF;
+                }
+                else if (size == 4)
+                {
+                    registers[targetRegister] = *reinterpret_cast<uint32_t*>(base + address) & 0xFFFFFFFFL;
+                }
+                else if (size == 8)
+                {
+                    registers[targetRegister] = *reinterpret_cast<uint64_t*>(base + address);
+                }
+                else
+                {
+                    throw VMException("Unsupported size: " + size);
+                }
             }
             DISPATCH();
         }
     TARGET(STORE_PARAMETER):
         {
-            const uint8_t size = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint64_t offset = *reinterpret_cast<uint64_t*>(base + registers[PC_REGISTER]);
-            registers[PC_REGISTER] += 8;
-            const uint8_t valueRegister = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]
-                ++);
-            const uint64_t address = registers[BP_REGISTER] + offset;
-            if (size == 1)
             {
-                *reinterpret_cast<uint8_t*>(base + address) = (registers[valueRegister] & 0xFF);
-            }
-            else if (size == 2)
-            {
-                *reinterpret_cast<uint16_t*>(base + address) = (registers[valueRegister] & 0xFFFF);
-            }
-            else if (size == 4)
-            {
-                *reinterpret_cast<uint32_t*>(base + address) = (registers[valueRegister] & 0xFFFFFFFFL);
-            }
-            else if (size == 8)
-            {
-                *reinterpret_cast<uint64_t*>(base + address) = registers[valueRegister];
-            }
-            else
-            {
-                throw VMException("Unsupported size: " + size);
+                const uint8_t size = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint64_t offset = *reinterpret_cast<uint64_t*>(base + registers[PC_REGISTER]);
+                registers[PC_REGISTER] += 8;
+                const uint8_t valueRegister = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]
+                    ++);
+                const uint64_t address = registers[BP_REGISTER] + offset;
+                if (size == 1)
+                {
+                    *reinterpret_cast<uint8_t*>(base + address) = (registers[valueRegister] & 0xFF);
+                }
+                else if (size == 2)
+                {
+                    *reinterpret_cast<uint16_t*>(base + address) = (registers[valueRegister] & 0xFFFF);
+                }
+                else if (size == 4)
+                {
+                    *reinterpret_cast<uint32_t*>(base + address) = (registers[valueRegister] & 0xFFFFFFFFL);
+                }
+                else if (size == 8)
+                {
+                    *reinterpret_cast<uint64_t*>(base + address) = registers[valueRegister];
+                }
+                else
+                {
+                    throw VMException("Unsupported size: " + size);
+                }
             }
             DISPATCH();
         }
     TARGET(JUMP_IF_TRUE):
         {
-            const uint8_t reg = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            if (registers[reg] != 0)
             {
-                registers[PC_REGISTER] = registers[target];
+                const uint8_t reg = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                if (registers[reg] != 0)
+                {
+                    registers[PC_REGISTER] = registers[target];
+                }
             }
             DISPATCH();
         }
     TARGET(JUMP_IF_FALSE):
         {
-            const uint8_t reg = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            if (registers[reg] == 0)
             {
-                registers[PC_REGISTER] = registers[target];
+                const uint8_t reg = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                if (registers[reg] == 0)
+                {
+                    registers[PC_REGISTER] = registers[target];
+                }
             }
             DISPATCH();
         }
     TARGET(SYSCALL):
         {
-            const uint8_t syscallRegister = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]
-                ++);
-            const uint64_t syscallNumber = registers[syscallRegister];
+            {
+                const uint8_t syscallRegister = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]
+                    ++);
+                const uint64_t syscallNumber = registers[syscallRegister];
+            }
             DISPATCH();
         }
     TARGET(THREAD_FINISH):
@@ -1720,35 +1981,43 @@ namespace lvm
         }
     TARGET(NEG_DOUBLE):
         {
-            const uint8_t operand = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[operand] = std::bit_cast<uint64_t>(-std::bit_cast<double>(registers[operand]));
+            {
+                const uint8_t operand = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[operand] = std::bit_cast<uint64_t>(-std::bit_cast<double>(registers[operand]));
+            }
             DISPATCH();
         }
     TARGET(NEG_FLOAT):
         {
-            const uint8_t operand = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            registers[operand] = std::bit_cast<uint32_t>(
-                -std::bit_cast<float>(static_cast<uint32_t>(registers[operand] & 0xFFFFFFFFL)));
+            {
+                const uint8_t operand = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                registers[operand] = std::bit_cast<uint32_t>(
+                    -std::bit_cast<float>(static_cast<uint32_t>(registers[operand] & 0xFFFFFFFFL)));
+            }
             DISPATCH();
         }
     TARGET(ATOMIC_NEG_DOUBLE):
         {
-            memory->lock();
-            const uint8_t operand = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint64_t address = registers[operand];
-            const double tmp = -*reinterpret_cast<double*>(base + address);
-            *reinterpret_cast<double*>(base + address) = tmp;
-            memory->unlock();
+            {
+                memory->lock();
+                const uint8_t operand = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint64_t address = registers[operand];
+                const double tmp = -*reinterpret_cast<double*>(base + address);
+                *reinterpret_cast<double*>(base + address) = tmp;
+                memory->unlock();
+            }
             DISPATCH();
         }
     TARGET(ATOMIC_NEG_FLOAT):
         {
-            memory->lock();
-            const uint8_t operand = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-            const uint64_t address = registers[operand];
-            const float tmp = -*reinterpret_cast<float*>(base + address);
-            *reinterpret_cast<float*>(base + address) = tmp;
-            memory->unlock();
+            {
+                memory->lock();
+                const uint8_t operand = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint64_t address = registers[operand];
+                const float tmp = -*reinterpret_cast<float*>(base + address);
+                *reinterpret_cast<float*>(base + address) = tmp;
+                memory->unlock();
+            }
             DISPATCH();
         }
 #ifdef USE_SWITCH_DISPATCH
