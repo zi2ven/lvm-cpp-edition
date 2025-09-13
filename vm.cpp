@@ -2024,6 +2024,22 @@ namespace lvm
             }
             DISPATCH();
         }
+    TARGET(JIT_FOR_RANGE):
+        {
+            {
+                // TODO
+            }
+            DISPATCH();
+        }
+    TARGET(INVOKE_NATIVE):
+        {
+            {
+                // Currently only native function calls with no arguments and no return values are supported
+                uint8_t ptr = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                reinterpret_cast<void(*)>(registers[ptr])();
+            }
+            DISPATCH();
+        }
 #ifdef USE_SWITCH_DISPATCH
             default:
                 std::cout << "Unsupported opcode: " << code << std::endl;

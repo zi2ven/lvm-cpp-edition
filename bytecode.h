@@ -173,6 +173,8 @@ namespace lvm::bytecode
     constexpr uint8_t NEG_FLOAT = 0x86;
     constexpr uint8_t ATOMIC_NEG_DOUBLE = 0x87;
     constexpr uint8_t ATOMIC_NEG_FLOAT = 0x88;
+    constexpr uint8_t JIT_FOR_RANGE = 0x89;
+    constexpr uint8_t INVOKE_NATIVE = 0x8a;
 
     std::string getInstructionName(uint8_t code);
     uint8_t parseInstructionCode(std::string code);
