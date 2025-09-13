@@ -265,7 +265,7 @@ namespace lvm
             DISPATCH_TABLE_ENTRY(THREAD_FINISH), DISPATCH_TABLE_ENTRY(NEG_DOUBLE), DISPATCH_TABLE_ENTRY(NEG_FLOAT),
             DISPATCH_TABLE_ENTRY(ATOMIC_NEG_DOUBLE), DISPATCH_TABLE_ENTRY(ATOMIC_NEG_FLOAT)
         };
-        goto end_dispatch;
+        DISPATCH();
 #endif
     TARGET(NOP):
         {
@@ -1765,7 +1765,7 @@ namespace lvm
 #endif
 
     end:
-        std::cout << registers[RETURN_VALUE_REGISTER] << std::endl;
+        // std::cout << registers[RETURN_VALUE_REGISTER] << std::endl;
         return;
     }
 
