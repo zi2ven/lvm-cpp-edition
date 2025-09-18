@@ -42,6 +42,7 @@ namespace lvm
     class FreeMemory;
 
     inline VirtualMachine* currentVirtualMachine;
+    inline thread_local ExecutionUnit* currentExecutionUnit;
 
     class VirtualMachine
     {
@@ -97,7 +98,7 @@ namespace lvm
         explicit ExecutionUnit(VirtualMachine* virtualMachine);
         void init(uint64_t stackBase, uint64_t entryPoint);
         void setThreadHandle(ThreadHandle* threadHandle);
-        void execute() const;
+        void execute();
         void interrupt(uint8_t interruptNumber) const;
         void destroy();
 

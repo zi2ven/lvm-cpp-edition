@@ -86,7 +86,7 @@ namespace lvm
     ExecutionUnit* VirtualMachine::createExecutionUnit(ThreadHandle* threadHandle, const uint64_t entryPoint)
     {
         auto* executionUnit = new ExecutionUnit(this);
-        uint64_t stack = this->memory->allocateMemory(threadHandle, this->stackSize);
+        const uint64_t stack = this->memory->allocateMemory(threadHandle, this->stackSize);
         executionUnit->init(stack + this->stackSize - 1, entryPoint);
         return executionUnit;
     }
@@ -201,8 +201,9 @@ namespace lvm
     }
 
 
-    void ExecutionUnit::execute() const
+    void ExecutionUnit::execute()
     {
+        currentExecutionUnit = this;
         ThreadHandle* threadHandle = this->threadHandle;
         Memory* memory = this->virtualMachine->memory;
         const auto base = reinterpret_cast<uint64_t>(memory->heap);
@@ -2118,3 +2119,11 @@ namespace lvm
         return count;
     }
 }
+
+#undef TARGET
+#undef DISPATCH
+#ifdef USE_SWITCH_DISPATCH
+#undef USE_SWITCH_DISPATCH
+#else
+#undef DISPATCH_TABLE_ENTRY
+#endif
