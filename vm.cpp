@@ -2119,11 +2119,3 @@ namespace lvm
         return count;
     }
 }
-
-#undef TARGET
-#undef DISPATCH
-#ifdef USE_SWITCH_DISPATCH
-#undef USE_SWITCH_DISPATCH
-#else
-#undef DISPATCH_TABLE_ENTRY
-#endif
