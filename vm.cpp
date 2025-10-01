@@ -2141,7 +2141,7 @@ namespace lvm
 #endif
 
     end:
-        std::cout << registers[RETURN_VALUE_REGISTER] << std::endl;
+        // std::cout << registers[RETURN_VALUE_REGISTER] << std::endl;
         return;
     }
 
