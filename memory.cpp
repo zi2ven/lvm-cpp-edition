@@ -38,7 +38,7 @@ namespace lvm
                     {
                         SYSTEM_INFO sysInfo;
                         GetSystemInfo(&sysInfo);
-                        uint64_t pageSize = sysInfo.dwPageSize;
+                        size_t pageSize = sysInfo.dwPageSize;
 
                         auto pageBase = reinterpret_cast<void*>(reinterpret_cast<uint64_t>(faultAddress) & ~(pageSize -
                             1));
@@ -55,7 +55,7 @@ namespace lvm
                     else if (mbi.State == MEM_COMMIT)
                     {
                         // std::cout << "Page is committed but access violation occurred (permissions issue?)" <<
-                            // std::endl;
+                        // std::endl;
                     }
                     else if (mbi.State == MEM_FREE)
                     {

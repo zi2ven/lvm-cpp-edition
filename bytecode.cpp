@@ -282,10 +282,11 @@ namespace lvm::bytecode
             return "ATOMIC_NEG_DOUBLE";
         case ATOMIC_NEG_FLOAT:
             return "ATOMIC_NEG_FLOAT";
-        case JIT_FOR_RANGE:
-            return "JIT_FOR_RANGE";
+        case JUMP_IF:
+            return "JUMP_IF";
         case INVOKE_NATIVE:
             return "INVOKE_NATIVE";
+
         default:
             return "UNKNOWN";
         }
@@ -555,10 +556,10 @@ namespace lvm::bytecode
             return ATOMIC_NEG_DOUBLE;
         if (code == "ATOMIC_NEG_FLOAT")
             return ATOMIC_NEG_FLOAT;
-        if (code == "JIT_FOR_RANGE")
-            return JIT_FOR_RANGE;
         if (code == "INVOKE_NATIVE")
             return INVOKE_NATIVE;
+        if (code == "JUMP_IF")
+            return JUMP_IF;
         throw std::runtime_error("Unknown instruction: " + code);
     }
 }

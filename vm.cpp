@@ -232,7 +232,8 @@ namespace lvm
             DISPATCH_TABLE_ENTRY(JUMP_IMMEDIATE),DISPATCH_TABLE_ENTRY(JE),DISPATCH_TABLE_ENTRY(JNE),
             DISPATCH_TABLE_ENTRY(JL),DISPATCH_TABLE_ENTRY(JLE),DISPATCH_TABLE_ENTRY(JG),DISPATCH_TABLE_ENTRY(JGE),
             DISPATCH_TABLE_ENTRY(JUL),DISPATCH_TABLE_ENTRY(JULE),DISPATCH_TABLE_ENTRY(JUG),
-            DISPATCH_TABLE_ENTRY(JUGE),DISPATCH_TABLE_ENTRY(MALLOC),DISPATCH_TABLE_ENTRY(FREE),DISPATCH_TABLE_ENTRY(REALLOC),
+            DISPATCH_TABLE_ENTRY(JUGE),DISPATCH_TABLE_ENTRY(MALLOC),DISPATCH_TABLE_ENTRY(FREE),
+            DISPATCH_TABLE_ENTRY(REALLOC),
             DISPATCH_TABLE_ENTRY(ADD),DISPATCH_TABLE_ENTRY(SUB),DISPATCH_TABLE_ENTRY(MUL),DISPATCH_TABLE_ENTRY(DIV),
             DISPATCH_TABLE_ENTRY(MOD),DISPATCH_TABLE_ENTRY(AND),DISPATCH_TABLE_ENTRY(OR),DISPATCH_TABLE_ENTRY(XOR),
             DISPATCH_TABLE_ENTRY(NOT), DISPATCH_TABLE_ENTRY(NEG),DISPATCH_TABLE_ENTRY(SHL),DISPATCH_TABLE_ENTRY(SHR),
@@ -264,8 +265,8 @@ namespace lvm
             DISPATCH_TABLE_ENTRY(LOAD_PARAMETER),DISPATCH_TABLE_ENTRY(STORE_PARAMETER),
             DISPATCH_TABLE_ENTRY(JUMP_IF_TRUE), DISPATCH_TABLE_ENTRY(JUMP_IF_FALSE),DISPATCH_TABLE_ENTRY(SYSCALL),
             DISPATCH_TABLE_ENTRY(THREAD_FINISH), DISPATCH_TABLE_ENTRY(NEG_DOUBLE), DISPATCH_TABLE_ENTRY(NEG_FLOAT),
-            DISPATCH_TABLE_ENTRY(ATOMIC_NEG_DOUBLE), DISPATCH_TABLE_ENTRY(ATOMIC_NEG_FLOAT), DISPATCH_TABLE_ENTRY(JIT_FOR_RANGE),
-            DISPATCH_TABLE_ENTRY(INVOKE_NATIVE),
+            DISPATCH_TABLE_ENTRY(ATOMIC_NEG_DOUBLE), DISPATCH_TABLE_ENTRY(ATOMIC_NEG_FLOAT),DISPATCH_TABLE_ENTRY(JUMP_IF),
+            DISPATCH_TABLE_ENTRY(INVOKE_NATIVE)
         };
         DISPATCH();
 #endif
@@ -434,15 +435,15 @@ namespace lvm
                     const auto float2 = std::bit_cast<float>(static_cast<uint32_t>(value2 & 0xFFFFFFFFL));
                     const bool result = float1 < float2;
                     flags = (flags & ~ZERO_MASK & ~CARRY_MASK & ~UNSIGNED_MASK) | ((
-                        result ? 0b11 : 0b00) << 1);
+                        result ? 0b11 : 0b00) << 1) | ((value1 == value2) ? 1 : 0);
                 }
                 else if (type == DOUBLE_TYPE)
                 {
-                    const auto float1 = std::bit_cast<double>(value1);
-                    const auto float2 = std::bit_cast<double>(value2);
-                    const bool result = float1 < float2;
+                    const auto double1 = std::bit_cast<double>(value1);
+                    const auto double2 = std::bit_cast<double>(value2);
+                    const bool result = double1 < double2;
                     flags = (flags & ~ZERO_MASK & ~CARRY_MASK & ~UNSIGNED_MASK) | ((
-                        result ? 0b11 : 0b00) << 1);
+                        result ? 0b11 : 0b00) << 1) | ((value1 == value2) ? 1 : 0);
                 }
                 else
                 {
@@ -500,15 +501,15 @@ namespace lvm
                     const auto float2 = std::bit_cast<float>(static_cast<uint32_t>(value2 & 0xFFFFFFFFL));
                     const bool result = float1 < float2;
                     flags = (flags & ~ZERO_MASK & ~CARRY_MASK & ~UNSIGNED_MASK) | ((
-                        result ? 0b11 : 0b00) << 1);
+                        result ? 0b11 : 0b00) << 1) | ((value1 == value2) ? 1 : 0);
                 }
                 else if (type == DOUBLE_TYPE)
                 {
-                    const auto float1 = std::bit_cast<double>(value1);
-                    const auto float2 = std::bit_cast<double>(value2);
-                    const bool result = float1 < float2;
+                    const auto double1 = std::bit_cast<double>(value1);
+                    const auto double2 = std::bit_cast<double>(value2);
+                    const bool result = double1 < double2;
                     flags = (flags & ~ZERO_MASK & ~CARRY_MASK & ~UNSIGNED_MASK) | ((
-                        result ? 0b11 : 0b00) << 1);
+                        result ? 0b11 : 0b00) << 1) | ((value1 == value2) ? 1 : 0);
                 }
                 else
                 {
@@ -2026,12 +2027,94 @@ namespace lvm
             }
             DISPATCH();
         }
-    TARGET(JIT_FOR_RANGE):
+    TARGET(JUMP_IF):
         {
             {
-                // TODO
-                uint8_t startRegister = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
-                uint8_t lengthRegister = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t type = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t condition = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t operand1 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t operand2 = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                const uint8_t target = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+
+                auto value1 = static_cast<int64_t>(registers[operand1]);
+                auto value2 = static_cast<int64_t>(registers[operand2]);
+                bool equal;
+                bool signedGreater;
+                bool signedLess;
+                bool unsignedGreater;
+                bool unsignedLess;
+                if (type == FLOAT_TYPE)
+                {
+                    const auto float1 = std::bit_cast<float>(static_cast<uint32_t>(value1 & 0xFFFFFFFFL));
+                    const auto float2 = std::bit_cast<float>(static_cast<uint32_t>(value2 & 0xFFFFFFFFL));
+                    equal = float1 == float2;
+                    signedGreater = float1 > float2;
+                    unsignedGreater = float1 > float2;
+                    signedLess = float1 < float2;
+                    unsignedLess = float1 < float2;
+                }
+                else if (type == DOUBLE_TYPE)
+                {
+                    const auto double1 = std::bit_cast<double>(value1);
+                    const auto double2 = std::bit_cast<double>(value2);
+                    equal = double1 == double2;
+                    signedGreater = double1 > double2;
+                    unsignedGreater = double1 > double2;
+                    signedLess = double1 < double2;
+                    unsignedLess = double1 < double2;
+                }
+                else
+                {
+                    if (type == BYTE_TYPE)
+                    {
+                        value1 = std::bit_cast<int8_t>(static_cast<uint8_t>(value1 & 0xff));
+                        value2 = std::bit_cast<int8_t>(static_cast<uint8_t>(value2 & 0xff));
+                    }
+                    else if (type == SHORT_TYPE)
+                    {
+                        value1 = static_cast<int16_t>(value1 & 0xffff);
+                        value2 = static_cast<int16_t>(value2 & 0xffff);
+                    }
+                    else if (type == INT_TYPE)
+                    {
+                        value1 = static_cast<int32_t>(value1 & 0xffffffffL);
+                        value2 = static_cast<int32_t>(value2 & 0xffffffffL);
+                    }
+                    else if (type != LONG_TYPE)
+                    {
+                        throw VMException("Unsupported type");
+                    }
+                    equal = value1 == value2;
+                    signedGreater = value1 > value2;
+                    unsignedGreater = std::bit_cast<uint64_t>(value1) > std::bit_cast<uint64_t>(value2);
+                    signedLess = value1 < value2;
+                    unsignedLess = std::bit_cast<uint64_t>(value1) > std::bit_cast<uint64_t>(value2);
+                }
+                uint64_t targetAddress = registers[target];
+                if ((condition & CONDITION_EQUAL) != 0)
+                    if (equal)
+                        registers[PC_REGISTER] = targetAddress;
+                if ((condition & CONDITION_NOT_EQUAL) != 0)
+                    if (!equal)
+                        registers[PC_REGISTER] = targetAddress;
+                if ((condition & CONDITION_UNSIGNED) != 0)
+                {
+                    if ((condition & CONDITION_GREATER) != 0)
+                        if (unsignedGreater)
+                            registers[PC_REGISTER] = targetAddress;
+                    if ((condition & CONDITION_LESS) != 0)
+                        if (unsignedLess)
+                            registers[PC_REGISTER] = targetAddress;
+                }
+                else
+                {
+                    if ((condition & CONDITION_GREATER) != 0)
+                        if (signedGreater)
+                            registers[PC_REGISTER] = targetAddress;
+                    if ((condition & CONDITION_LESS) != 0)
+                        if (signedLess)
+                            registers[PC_REGISTER] = targetAddress;
+                }
             }
             DISPATCH();
         }
@@ -2058,7 +2141,7 @@ namespace lvm
 #endif
 
     end:
-        // std::cout << registers[RETURN_VALUE_REGISTER] << std::endl;
+        std::cout << registers[RETURN_VALUE_REGISTER] << std::endl;
         return;
     }
 

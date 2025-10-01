@@ -35,6 +35,11 @@ namespace lvm::bytecode
     constexpr uint8_t TC_SET_REGISTER = 3;
     constexpr uint8_t INTERRUPT_DIVIDE_BY_ZERO = 0;
     constexpr uint8_t INTERRUPT_PAGE_ERROR = 1;
+    constexpr uint8_t CONDITION_EQUAL = 1;
+    constexpr  uint8_t CONDITION_NOT_EQUAL = 1 << 1;
+    constexpr uint8_t CONDITION_GREATER = 1 << 2;
+    constexpr uint8_t CONDITION_LESS = 1 << 3;
+    constexpr uint64_t CONDITION_UNSIGNED = 1 << 4;
 
     constexpr uint8_t NOP = 0x00;
     constexpr uint8_t PUSH_1 = 0x01;
@@ -173,7 +178,7 @@ namespace lvm::bytecode
     constexpr uint8_t NEG_FLOAT = 0x86;
     constexpr uint8_t ATOMIC_NEG_DOUBLE = 0x87;
     constexpr uint8_t ATOMIC_NEG_FLOAT = 0x88;
-    constexpr uint8_t JIT_FOR_RANGE = 0x89;
+    constexpr uint8_t JUMP_IF = 0x89;
     constexpr uint8_t INVOKE_NATIVE = 0x8a;
 
     std::string getInstructionName(uint8_t code);
