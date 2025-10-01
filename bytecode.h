@@ -36,10 +36,15 @@ namespace lvm::bytecode
     constexpr uint8_t INTERRUPT_DIVIDE_BY_ZERO = 0;
     constexpr uint8_t INTERRUPT_PAGE_ERROR = 1;
     constexpr uint8_t CONDITION_EQUAL = 1;
-    constexpr  uint8_t CONDITION_NOT_EQUAL = 1 << 1;
+    constexpr uint8_t CONDITION_NOT_EQUAL = 1 << 1;
     constexpr uint8_t CONDITION_GREATER = 1 << 2;
     constexpr uint8_t CONDITION_LESS = 1 << 3;
-    constexpr uint64_t CONDITION_UNSIGNED = 1 << 4;
+    constexpr uint8_t CONDITION_UNSIGNED = 1 << 4;
+    constexpr uint64_t SYSCALL_TEST = 0;
+    constexpr uint64_t SYSCALL_LOAD_NATIVE_LIBRARY = 1;
+    constexpr uint64_t SYSCALL_LOAD_NATIVE_LIBRARY_SYMBOL = 2;
+    constexpr uint64_t SYSCALL_LOAD_DYNAMIC_LIBRARY = 3;
+    constexpr uint64_t SYSCALL_TEST_PRINT_INT = 0;
 
     constexpr uint8_t NOP = 0x00;
     constexpr uint8_t PUSH_1 = 0x01;

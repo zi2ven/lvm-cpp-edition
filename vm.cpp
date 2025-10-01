@@ -265,7 +265,8 @@ namespace lvm
             DISPATCH_TABLE_ENTRY(LOAD_PARAMETER),DISPATCH_TABLE_ENTRY(STORE_PARAMETER),
             DISPATCH_TABLE_ENTRY(JUMP_IF_TRUE), DISPATCH_TABLE_ENTRY(JUMP_IF_FALSE),DISPATCH_TABLE_ENTRY(SYSCALL),
             DISPATCH_TABLE_ENTRY(THREAD_FINISH), DISPATCH_TABLE_ENTRY(NEG_DOUBLE), DISPATCH_TABLE_ENTRY(NEG_FLOAT),
-            DISPATCH_TABLE_ENTRY(ATOMIC_NEG_DOUBLE), DISPATCH_TABLE_ENTRY(ATOMIC_NEG_FLOAT),DISPATCH_TABLE_ENTRY(JUMP_IF),
+            DISPATCH_TABLE_ENTRY(ATOMIC_NEG_DOUBLE), DISPATCH_TABLE_ENTRY(ATOMIC_NEG_FLOAT),
+            DISPATCH_TABLE_ENTRY(JUMP_IF),
             DISPATCH_TABLE_ENTRY(INVOKE_NATIVE)
         };
         DISPATCH();
@@ -1976,9 +1977,28 @@ namespace lvm
     TARGET(SYSCALL):
         {
             {
-                const uint8_t syscallRegister = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]
-                    ++);
-                const uint64_t syscallNumber = registers[syscallRegister];
+                const uint8_t syscallRegister = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++);
+                switch (const uint64_t syscallNumber = registers[syscallRegister])
+                {
+                case SYSCALL_TEST:
+                    {
+                        switch (registers[1])
+                        {
+                        case SYSCALL_TEST_PRINT_INT:
+                            {
+                                std::cout << registers[2] << std::endl;
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                case SYSCALL_LOAD_NATIVE_LIBRARY:
+                    {
+                        const char* path = reinterpret_cast<char*>(base + registers[1]);
+                        break;
+                    }
+                default: ;
+                }
             }
             DISPATCH();
         }
