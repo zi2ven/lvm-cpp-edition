@@ -49,9 +49,9 @@ jobs:
         echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
         # 设置可执行文件名称
         if [ "${{ matrix.os }}" = "windows-latest" ]; then
-          echo "exe-name=lvm.exe" >> "$GITHUB_OUTPUT"
+          echo "exe-name=lvm_cpp_edition.exe" >> "$GITHUB_OUTPUT"
         else
-          echo "exe-name=lvm" >> "$GITHUB_OUTPUT"
+          echo "exe-name=lvm_cpp_edition" >> "$GITHUB_OUTPUT"
         fi
 
     - name: Install dependencies (Ubuntu)
