@@ -38,7 +38,7 @@ int read_file_to_buffer(const std::string& path, uint8_t*& raw, size_t& size)
 int main(int argc, const char** argv)
 {
     lvm::InstallPageFaultHandler();
-    argparse::ArgumentParser program("lvm");
+    argparse::ArgumentParser program("lvm", lvm::VERSION_STRING);
     program.add_argument("file")
            .help("File to execute")
            .required();

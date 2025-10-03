@@ -25,6 +25,7 @@
 
 namespace lvm
 {
+    constexpr const char* VERSION_STRING = "0.2.1";
     constexpr uint64_t DEFAULT_STACK_SIZE = 4 * 1024 * 1024;
     constexpr uint64_t DEFAULT_MEMORY_SIZE = 1024 * 1024 * 1024;
     constexpr uint64_t LVM_VERSION = 0;
