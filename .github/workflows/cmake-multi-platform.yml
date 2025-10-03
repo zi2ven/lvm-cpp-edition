@@ -17,21 +17,13 @@ jobs:
         build_type: [Release]
         include:
           - os: ubuntu-latest
-            c_compiler: gcc
-            cpp_compiler: g++
+            c_compiler: clang
+            cpp_compiler: clang++
             artifact_name: lvm-linux
-          - os: ubuntu-latest
+          - os: windows-latest
             c_compiler: clang
             cpp_compiler: clang++
-            artifact_name: lvm-linux-clang
-          - os: windows-latest
-            c_compiler: cl
-            cpp_compiler: cl
             artifact_name: lvm-windows
-          - os: windows-latest
-            c_compiler: clang
-            cpp_compiler: clang++
-            artifact_name: lvm-windows-clang
           - os: macos-latest
             c_compiler: clang
             cpp_compiler: clang++
@@ -72,11 +64,7 @@ jobs:
     
     - name: Configure CMake
       run: |
-        cmake -B ${{ steps.strings.outputs.build-output-dir }} \
-          -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }} \
-          -DCMAKE_C_COMPILER=${{ matrix.c_compiler }} \
-          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
-          -S ${{ github.workspace }}
+        cmake -B ${{ steps.strings.outputs.build-output-dir }} -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }} -DCMAKE_C_COMPILER=${{ matrix.c_compiler }} -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -S ${{ github.workspace }}
 
     - name: Build
       run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config ${{ matrix.build_type }}
