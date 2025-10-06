@@ -10,10 +10,10 @@
 
 namespace lvm
 {
-    class VMException : std::runtime_error
+    class VMException final : std::runtime_error
     {
     public:
-        explicit VMException(std::string message);
+        explicit VMException(const std::string& message);
     };
 }
 #endif //EXCEPTION_H

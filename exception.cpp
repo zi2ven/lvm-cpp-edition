@@ -8,7 +8,7 @@
 
 namespace lvm
 {
-    VMException::VMException(std::string message): std::runtime_error(message)
+    VMException::VMException(const std::string& message): std::runtime_error(message)
     {
     }
 }

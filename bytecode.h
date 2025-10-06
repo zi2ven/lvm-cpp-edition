@@ -186,8 +186,8 @@ namespace lvm::bytecode
     constexpr uint8_t JUMP_IF = 0x89;
     constexpr uint8_t INVOKE_NATIVE = 0x8a;
 
-    std::string getInstructionName(uint8_t code);
-    uint8_t parseInstructionCode(std::string code);
+    std::string_view getInstructionName(uint8_t code);
+    uint8_t parseInstructionCode(const std::string& code);
 }
 
 #endif //BYTECODE_H
