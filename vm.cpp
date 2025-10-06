@@ -30,7 +30,7 @@ namespace lvm
 {
     using namespace bytecode;
 
-    VirtualMachine::VirtualMachine(uint64_t heapSize, uint64_t stackSize): stackSize(stackSize)
+    VirtualMachine::VirtualMachine(uint64_t heapSize, uint64_t stackSize) : stackSize(stackSize)
     {
         this->memory = new Memory(heapSize);
     }
@@ -120,7 +120,7 @@ namespace lvm
         FileHandle* fileHandle = fd2FileHandle[fd];
         if (fileHandle == nullptr)
         {
-            throw VMException("Invalid file descriptor: " + fd);
+            throw VMException("Invalid file descriptor: " + std::to_string(fd));
         }
         return fileHandle->_read(buffer, count);
     }
@@ -130,7 +130,7 @@ namespace lvm
         const FileHandle* fileHandle = fd2FileHandle[fd];
         if (fileHandle == nullptr)
         {
-            throw VMException("Invalid file descriptor: " + fd);
+            throw VMException("Invalid file descriptor: " + std::to_string(fd));
         }
         return fileHandle->_write(buffer, count);
     }
@@ -161,7 +161,7 @@ namespace lvm
     }
 
 
-    ThreadHandle::ThreadHandle(const uint64_t threadID, ExecutionUnit* executionUnit): threadID(threadID),
+    ThreadHandle::ThreadHandle(const uint64_t threadID, ExecutionUnit* executionUnit) : threadID(threadID),
         executionUnit(executionUnit)
     {
     }
@@ -182,7 +182,7 @@ namespace lvm
     }
 
 
-    ExecutionUnit::ExecutionUnit(VirtualMachine* virtualMachine): virtualMachine(virtualMachine)
+    ExecutionUnit::ExecutionUnit(VirtualMachine* virtualMachine) : virtualMachine(virtualMachine)
     {
     }
 
@@ -215,6 +215,7 @@ namespace lvm
         {
             switch (const uint8_t code = *reinterpret_cast<uint8_t*>(base + registers[PC_REGISTER]++))
             {
+
 #else
         static void* dispatchTable[] = {
             DISPATCH_TABLE_ENTRY(NOP),DISPATCH_TABLE_ENTRY(PUSH_1),DISPATCH_TABLE_ENTRY(PUSH_2),
@@ -1782,7 +1783,7 @@ namespace lvm
                 }
                 else
                 {
-                    throw VMException("Unsupported size: " + size);
+                    throw VMException("Unsupported size: " + std::to_string(size));
                 }
             }
             DISPATCH();
@@ -1817,7 +1818,7 @@ namespace lvm
                 }
                 else
                 {
-                    throw VMException("Unsupported size: " + size);
+                    throw VMException("Unsupported size: " + std::to_string(size));
                 }
             }
             DISPATCH();
@@ -1849,7 +1850,7 @@ namespace lvm
                 }
                 else
                 {
-                    throw VMException("Unsupported size: " + size);
+                    throw VMException("Unsupported size: " + std::to_string(size));
                 }
             }
             DISPATCH();
@@ -1881,7 +1882,7 @@ namespace lvm
                 }
                 else
                 {
-                    throw VMException("Unsupported size: " + size);
+                    throw VMException("Unsupported size: " + std::to_string(size));
                 }
             }
             DISPATCH();
@@ -1913,7 +1914,7 @@ namespace lvm
                 }
                 else
                 {
-                    throw VMException("Unsupported size: " + size);
+                    throw VMException("Unsupported size: " + std::to_string(size));
                 }
             }
             DISPATCH();
@@ -1945,7 +1946,7 @@ namespace lvm
                 }
                 else
                 {
-                    throw VMException("Unsupported size: " + size);
+                    throw VMException("Unsupported size: " + std::to_string(size));
                 }
             }
             DISPATCH();
@@ -2148,8 +2149,8 @@ namespace lvm
             DISPATCH();
         }
 #ifdef USE_SWITCH_DISPATCH
-            default:
-                std::cout << "Unsupported opcode: " << code << std::endl;
+    default:
+        std::cout << "Unsupported opcode: " << code << std::endl;
             }
         }
 #else
@@ -2168,7 +2169,7 @@ namespace lvm
     void ExecutionUnit::interrupt(const uint8_t interruptNumber) const
     {
         Memory* memory = this->virtualMachine->memory;
-        const uint64_t base = reinterpret_cast<uint64_t>(memory->heap);
+        const auto base = reinterpret_cast<uint64_t>(memory->heap);
         registers[SP_REGISTER] -= 8;
         *reinterpret_cast<uint64_t*>(base + registers[SP_REGISTER]) = registers[FLAGS_REGISTER];
         registers[SP_REGISTER] -= 8;
